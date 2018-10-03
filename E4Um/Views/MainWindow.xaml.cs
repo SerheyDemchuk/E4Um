@@ -27,28 +27,49 @@ namespace E4Um
     public partial class MainWindow : Window
     {
         NotifyIcon nIcon = new NotifyIcon();
+        ContextMenuStrip cMenuStrip = new ContextMenuStrip();
         public MainWindow()
         {
             InitializeComponent();
 
             // Initialising tray icon
-            nIcon.DoubleClick += new EventHandler(nIcon_DoubleClick);
             nIcon.Icon = new Icon(@"../../Resources/uk.ico");
             nIcon.Visible = true;
             nIcon.Text = "E4U";
+            nIcon.DoubleClick += new EventHandler(nIcon_DoubleClick);
+            //// /Initialising tray icon
 
-            // /Initialising tray icon
+            //// Initialising context menu strip
+            cMenuStrip.Items.Add("Открыть окно настроек");
+            cMenuStrip.Items.Add("-");
+            cMenuStrip.Items.Add("Открыть главное окно");
+            cMenuStrip.Items.Add("Выход");
+            cMenuStrip.Items[0].Click += new EventHandler(cMenuStripItems0_Click);
+            cMenuStrip.Items[3].Click += new EventHandler(cMenuStripItems2_Click);
+            nIcon.ContextMenuStrip = cMenuStrip;
+            // /Initialising context menu strip
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            new PopUpWindow("appear") {DataContext = new PopUpWindowModel()}.Show();
+            new PopUpWindow("appear"){DataContext = new PopUpWindowModel()}.Show();
             Hide();
         }
 
         private void nIcon_DoubleClick(object sender, EventArgs e)
         {
             Show();
+        }
+
+        private void cMenuStripItems0_Click(object sender, EventArgs e)
+        {
+            Show();
+        }
+
+        private void cMenuStripItems2_Click(object sender, EventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+            nIcon.Visible = false;
         }
     }
 }

@@ -16,5 +16,6 @@ namespace E4Um
             base.OnStartup(e);
             new MainWindow() { DataContext = mainVM }.Show();
         }
+
     }
 }

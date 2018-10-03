@@ -39,8 +39,8 @@ namespace E4Um.Views
                     Opacity = 1;
                     break;
             }
-            /// Setting the default window's position
-            
+            // /Setting the default window's position
+
             Task.Run(() =>
             {
                 showWindow(mode);

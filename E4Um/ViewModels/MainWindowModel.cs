@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Forms;
+using System.Drawing;
 using E4Um.Views;
 using E4Um.Helpers;
 
@@ -13,6 +15,7 @@ namespace E4Um.ViewModels
         public MainWindowModel()
         {
             //OpenWindowCommand = new RelayCommand(Open);
+
         }
 
         //public void Open(object parameter)
@@ -21,5 +24,6 @@ namespace E4Um.ViewModels
         //    popup.Show();
         //    CloseWindow();
         //}
+
     }
 }
