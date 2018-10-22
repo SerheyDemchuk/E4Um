@@ -11,7 +11,7 @@ using E4Um.Helpers;
 namespace E4Um.Views
 {
     /// <summary>
-    /// Логика взаимодействия для PopUp.xaml
+    /// Логика взаимодействия для PopUpWindow.xaml
     /// </summary>
     public partial class PopUpWindow : Window
     {
@@ -45,7 +45,8 @@ namespace E4Um.Views
             {
                 showWindow(mode);
                 closeWindow(mode);
-            });        
+            });
+
 
         }
 
@@ -58,6 +59,7 @@ namespace E4Um.Views
                     case "appear":
                         DoubleAnimation animation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
                         BeginAnimation(OpacityProperty, animation);
+                        
                         break;
                     case "popup":
                         for (int i = 0; i < Height + 5; i++)
@@ -66,7 +68,6 @@ namespace E4Um.Views
                             {
                                 Top = Top - 1;
                             }));
-                            // Thread.Sleep(0);
                         }
                         break;
                 }
@@ -75,23 +76,21 @@ namespace E4Um.Views
 
         public void closeWindow(string mode)
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             Dispatcher.Invoke(() =>
             {
-                Close();
-                //switch (mode)
-                //{
-                //    case "appear":
-                //        //DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
-                //        //BeginAnimation(OpacityProperty, animation);
-                //        Close();
-                //        break;
-                //    case "popup":
-                //        Close();
-                //        // Thread.Sleep(0);
-                //        break;
-                //}
+                DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
+                BeginAnimation(OpacityProperty, animation);
+
+                if (mode == "popup")
+                {
+                    Left = pt.X - 5;
+                    Top = pt.Y + 40;
+                    BeginAnimation(OpacityProperty, null);
+                }
             });
+
+            
         }
 
     }

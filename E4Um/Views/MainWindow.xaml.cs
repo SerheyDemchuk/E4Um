@@ -50,9 +50,14 @@ namespace E4Um
             // /Initialising context menu strip
         }
 
+        public void Open(IWindowService openWindowService)
+        {
+            openWindowService.CreatePopUpWindow();
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            new PopUpWindow("appear"){DataContext = new PopUpWindowModel()}.Show();
+            Open(new OpenWindowService());
             Hide();
         }
 

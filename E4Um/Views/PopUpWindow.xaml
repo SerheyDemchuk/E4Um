@@ -8,12 +8,14 @@
         Title="PopUp" Height="80" Width="300" ResizeMode="NoResize" Background="#FFFFF2A3" Topmost="True" Margin="0,0,0,0" WindowStyle="None" AllowsTransparency="True" ShowInTaskbar="False" >
 
     <Grid>
-        <Label x:Name="label" Content="Eagle - орел" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="280" Height="60" FontSize="36"/>
-
-        <!--<Grid.ColumnDefinitions>
-            <ColumnDefinition Width="8*"/>
-            <ColumnDefinition Width="7*"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20px" Grid.ColumnSpan="2" Margin="97,37,96,36">Hello world!</TextBlock>-->
+        
+        <!--<ItemsControl x:Name="dictionaryItemsControl" ItemsSource="{Binding Words}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>-->
+                    <Label x:Name="label" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="280" Height="60" FontSize="36" Content="English For You"/>
+                <!--</DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>-->
+       
     </Grid>
 </Window>

@@ -59,6 +59,7 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\OpenWindowService.cs" />
     <Compile Include="Helpers\DialogCloser.cs" />
+    <Compile Include="Helpers\ReadFromFileService.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="ViewModels\MainWindowModel.cs" />
     <Compile Include="ViewModels\PopUpWindowModel.cs" />

@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Windows.Threading;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using E4Um.Models;
 using E4Um.Views;
 using E4Um.Helpers;
 using System.Windows;
@@ -8,27 +12,52 @@ namespace E4Um.ViewModels
 {
     class PopUpWindowModel : ViewModelBase
     {
-        //PopUpWindow popUpWindow;
-        DispatcherTimer timer;
-        //public RelayCommand OpenWindowCommand { get; set; }
+        Dictionary<string, double> words;
 
-        public PopUpWindowModel()
+        public Dictionary<string, double> Words
         {
-            //OpenWindowCommand = new RelayCommand(Open);
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(5);
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            get
+            {
+                words = new Dictionary<string, double>(PopUp.GetWords());
+                return words;
+            }
+        }
+        public int SecondsToOpen { get; set; }
+
+        private readonly IWindowService windowService;
+        
+        DispatcherTimer openTimer;
+
+
+        public PopUpWindowModel(IWindowService windowService)
+        {
+            this.windowService = windowService;
+            SecondsToOpen = 5;
+            openTimer = new DispatcherTimer();
+            openTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen);
+            openTimer.Tick += Open_Timer_Tick;
+            openTimer.Tick += Close_Timer_Tick;
+            openTimer.Start();
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Open_Timer_Tick(object sender, EventArgs e)
         {
-            Open(new OpenWindowService());
+            Open();
         }
 
-        public void Open(IWindowService openWindowService)
+        private void Close_Timer_Tick(object sender, EventArgs e)
         {
-            openWindowService.CreatePopUpWindow();
+            Close();
+        }
+
+        public void Open()
+        {
+            windowService.ShowPopUpWindow("appear");
+        }
+
+        public void Close()
+        {
+            windowService.HidePopUpWindow("appear");
         }
     }
 }
