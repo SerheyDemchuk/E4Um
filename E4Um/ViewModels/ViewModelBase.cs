@@ -9,7 +9,7 @@ namespace E4Um.ViewModels
     class ViewModelBase : INotifyPropertyChanged      
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
             {

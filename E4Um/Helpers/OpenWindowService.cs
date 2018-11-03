@@ -15,7 +15,7 @@ namespace E4Um.Helpers
 {
     public interface IWindowService
     {
-        void CreatePopUpWindow();
+        void CreatePopUpWindow(string mode);
         void ShowPopUpWindow(string mode);
         void HidePopUpWindow(string mode);
         //void CreateMainWindow();
@@ -23,20 +23,49 @@ namespace E4Um.Helpers
     }
     class OpenWindowService : IWindowService
     {
-
         //public OpenWindowService(MainWindow mainWindow)
         //{
         //    _mainWidnow = mainWindow;
         //}
-        public void CreatePopUpWindow()
+        public void CreatePopUpWindow(string mode)
         {
-            PopUpWindow popUpWindow = new PopUpWindow("appear") { DataContext = new PopUpWindowModel(new OpenWindowService())};    
-            popUpWindow.ShowActivated = false;
-            popUpWindow.Show();
+            Point pt = SystemParameters.WorkArea.TopLeft;
+            PopUpWindow popUpWindow = new PopUpWindow("appear") { DataContext = new PopUpWindowModel(new OpenWindowService())};
+
+            switch (mode)
+            {
+                case "appear":
+                    popUpWindow.Loaded += (object sender, RoutedEventArgs e) =>
+                    {
+                        pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+                        pt.Offset(-popUpWindow.Width, -popUpWindow.Height);
+                        popUpWindow.Left = pt.X - 5;
+                        popUpWindow.Top = pt.Y - 5;
+                        popUpWindow.Opacity = 0;
+                    };
+                    popUpWindow.ShowActivated = false;
+                    popUpWindow.Show();
+                    break;
+                case "popup":
+                    popUpWindow.Loaded += (object sender, RoutedEventArgs e) =>
+                    {
+                        pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+                        pt.Offset(-popUpWindow.Width, 2*popUpWindow.Height);
+                        popUpWindow.Left = pt.X;
+                        popUpWindow.Top = pt.Y;
+                        popUpWindow.Opacity = 1;
+                    };
+                    popUpWindow.ShowActivated = false;
+                    popUpWindow.Show();
+                    break;
+            }
+            
+            
         }
 
         public void ShowPopUpWindow(string mode)
         {
+            Point pt = SystemParameters.WorkArea.TopLeft;
             Window popUpWindow = null;
 
             foreach (Window window in Application.Current.Windows)
@@ -46,33 +75,38 @@ namespace E4Um.Helpers
                     popUpWindow = window;
                 }
             }
-           try
-           { 
-                Task.Run(() =>
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
+
+            switch (mode)
+            {
+                case "appear":
+                    DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                    popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+
+                    popUpWindow.SizeChanged += (object sender, SizeChangedEventArgs e) =>
                     {
-                        switch (mode)
+                        pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+                        pt.Offset(-popUpWindow.ActualWidth, -popUpWindow.ActualHeight);
+                        popUpWindow.Left = pt.X - 5;
+                        popUpWindow.Top = pt.Y - 5;
+                    };
+
+                    break;
+                case "popup":
+                    pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+                    pt.Offset(-popUpWindow.ActualWidth, 45);
+                    popUpWindow.Left = pt.X - 5;
+                    popUpWindow.Top = pt.Y - 5;
+
+                    for (int i = 0; i < popUpWindow.Height + 45; i++)
+                    {
+                        Application.Current.Dispatcher.Invoke((() =>
                         {
-                            case "appear":
-                                DoubleAnimation animation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
-                                popUpWindow.BeginAnimation(UIElement.OpacityProperty, animation);
-                                break;
-                            case "popup":
-                                popUpWindow.Opacity = 1;
-                                for (int i = 0; i < popUpWindow.Height + 45; i++)
-                                {
-                                    Application.Current.Dispatcher.Invoke((() =>
-                                    {
-                                        popUpWindow.Top = popUpWindow.Top - 1;
-                                    }));
-                                }
-                                break;
-                        }
-                    });
-                });
-               }
-           catch { }
+                            popUpWindow.Top = popUpWindow.Top - 1;
+                        }));
+                    }
+
+                    break;
+            }
 
         }
 
@@ -88,31 +122,17 @@ namespace E4Um.Helpers
                 }
             }
 
-            Point pt = SystemParameters.WorkArea.TopLeft;
-            pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
-            pt.Offset(-popUpWindow.Width, 0);
+            DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
+            popUpWindow.BeginAnimation(UIElement.OpacityProperty, animation);
 
-            try
+            if (mode == "popup")
             {
-                Task.Run(() =>
-                {
-                    Thread.Sleep(2000);
-                    Application.Current.Dispatcher.Invoke(() =>
-                {
-                    DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
-                    popUpWindow.BeginAnimation(UIElement.OpacityProperty, animation);
-
-                    if (mode == "popup")
-                    {
-                        popUpWindow.Left = pt.X - 5;
-                        popUpWindow.Top = pt.Y + 40;
-                        popUpWindow.BeginAnimation(UIElement.OpacityProperty, null);
-                    }
-                });
-                });
+                popUpWindow.Top += popUpWindow.Height + 45;
+                popUpWindow.BeginAnimation(UIElement.OpacityProperty, null);
             }
-            catch { }
+
         }
+
 
         //public void CreateMainWindow()
         //{

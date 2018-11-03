@@ -18,6 +18,7 @@ using System.Windows.Interop;
 using E4Um.Views;
 using E4Um.ViewModels;
 using E4Um.Helpers;
+using System.ComponentModel;
 
 namespace E4Um
 {
@@ -52,7 +53,7 @@ namespace E4Um
 
         public void Open(IWindowService openWindowService)
         {
-            openWindowService.CreatePopUpWindow();
+            openWindowService.CreatePopUpWindow("appear");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -74,6 +75,11 @@ namespace E4Um
         private void cMenuStripItems2_Click(object sender, EventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
+            nIcon.Visible = false;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
             nIcon.Visible = false;
         }
     }

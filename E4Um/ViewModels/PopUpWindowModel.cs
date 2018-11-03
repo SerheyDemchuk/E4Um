@@ -13,6 +13,7 @@ namespace E4Um.ViewModels
     class PopUpWindowModel : ViewModelBase
     {
         Dictionary<string, double> words;
+        string windowContent;
 
         public Dictionary<string, double> Words
         {
@@ -22,32 +23,64 @@ namespace E4Um.ViewModels
                 return words;
             }
         }
+
+        public string WindowContent
+        {
+            get { return windowContent; }
+            set
+            {
+                windowContent = value;
+                NotifyPropertyChanged("WindowContent");
+            }
+        }
+
+        public List<string> WordPairs { get; set; }
+
+        public int CurrentRecord { get; set; }
+
         public int SecondsToOpen { get; set; }
 
         private readonly IWindowService windowService;
-        
-        DispatcherTimer openTimer;
 
+        DispatcherTimer openWindowTimer;
 
         public PopUpWindowModel(IWindowService windowService)
         {
+            WordPairs = new List<string>();
+            foreach (KeyValuePair<string, double> kvp in Words)
+            {
+                WordPairs.Add(kvp.Key);
+            }
+
             this.windowService = windowService;
-            SecondsToOpen = 5;
-            openTimer = new DispatcherTimer();
-            openTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen);
-            openTimer.Tick += Open_Timer_Tick;
-            openTimer.Tick += Close_Timer_Tick;
-            openTimer.Start();
+            CurrentRecord = 0;
+            SecondsToOpen = 2;
+            ChangeWindowContent();
+            openWindowTimer = new DispatcherTimer();
+            openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen);
+            openWindowTimer.Tick += OpenWindow_Timer_Tick;
+            openWindowTimer.Start();
         }
 
-        private void Open_Timer_Tick(object sender, EventArgs e)
+        private void OpenWindow_Timer_Tick(object sender, EventArgs e)
         {
-            Open();
-        }
+            Task.Run(() =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ChangeWindowContent();
+                    Open();
+                });
+            });
+            Task.Run(() =>
+            {
+                Thread.Sleep(1000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Close();
+                });
+            });
 
-        private void Close_Timer_Tick(object sender, EventArgs e)
-        {
-            Close();
         }
 
         public void Open()
@@ -57,7 +90,24 @@ namespace E4Um.ViewModels
 
         public void Close()
         {
-            windowService.HidePopUpWindow("appear");
+            windowService.HidePopUpWindow("appear");   
+        }
+
+        public void ChangeWindowContent()
+        {
+            
+           if (CurrentRecord != WordPairs.Count)
+           {
+                WindowContent = WordPairs[CurrentRecord];
+                CurrentRecord++;
+           }
+           else
+            {
+                CurrentRecord = 0;
+                WindowContent = WordPairs[CurrentRecord];
+                CurrentRecord++;
+            }
+
         }
     }
 }

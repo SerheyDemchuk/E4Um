@@ -5,17 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:E4Um.ViewModels"
         mc:Ignorable="d"
-        Title="PopUp" Height="80" Width="300" ResizeMode="NoResize" Background="#FFFFF2A3" Topmost="True" Margin="0,0,0,0" WindowStyle="None" AllowsTransparency="True" ShowInTaskbar="False" >
+        Title="PopUp" Height="80" Width="300" ResizeMode="NoResize" Background="#FFFFF2A3" Topmost="True" Margin="0,0,0,0" ShowInTaskbar="False" SizeToContent="Width" WindowStyle="None" AllowsTransparency="True">
 
     <Grid>
-        
+
         <!--<ItemsControl x:Name="dictionaryItemsControl" ItemsSource="{Binding Words}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>-->
-                    <Label x:Name="label" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="280" Height="60" FontSize="36" Content="English For You"/>
-                <!--</DataTemplate>
+        <Label x:Name="label" Content="{Binding WindowContent}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36"  />
+        <!--</DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>-->
-       
+
     </Grid>
 </Window>

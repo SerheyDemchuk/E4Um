@@ -19,7 +19,7 @@ namespace E4Um.Helpers
                 string curLine;
                 while ((curLine = reader.ReadLine()) != null)
                 {
-                    words.Add(curLine, 10);
+                    words.Add(curLine, 5);
                 }
                 reader.Close();
                 return words;

@@ -7,7 +7,7 @@
         xmlns:helpers="clr-namespace:E4Um.Helpers"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
-        helpers:DialogCloser.DialogResult="{Binding CloseWindowFlag}">
+        helpers:DialogCloser.DialogResult="{Binding CloseWindowFlag}" Closing="Window_Closing">
   
     <Grid>
         <Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click" >Click me!</Button>
