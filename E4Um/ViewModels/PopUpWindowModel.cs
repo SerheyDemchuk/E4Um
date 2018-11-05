@@ -3,10 +3,11 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Windows;
 using E4Um.Models;
 using E4Um.Views;
 using E4Um.Helpers;
-using System.Windows;
+using E4Um.AppSettings;
 
 namespace E4Um.ViewModels
 {
@@ -38,13 +39,12 @@ namespace E4Um.ViewModels
 
         public int CurrentRecord { get; set; }
 
-        public int SecondsToOpen { get; set; }
-
         private readonly IWindowService windowService;
+        private readonly IConfigProvider configProvider;
 
         DispatcherTimer openWindowTimer;
 
-        public PopUpWindowModel(IWindowService windowService)
+        public PopUpWindowModel(IWindowService windowService, IConfigProvider configProvider)
         {
             WordPairs = new List<string>();
             foreach (KeyValuePair<string, double> kvp in Words)
@@ -53,11 +53,11 @@ namespace E4Um.ViewModels
             }
 
             this.windowService = windowService;
+            this.configProvider = configProvider;
             CurrentRecord = 0;
-            SecondsToOpen = 2;
             ChangeWindowContent();
             openWindowTimer = new DispatcherTimer();
-            openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen);
+            openWindowTimer.Interval = TimeSpan.FromSeconds(this.configProvider.SecondsToOpen);
             openWindowTimer.Tick += OpenWindow_Timer_Tick;
             openWindowTimer.Start();
         }
@@ -74,7 +74,7 @@ namespace E4Um.ViewModels
             });
             Task.Run(() =>
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(configProvider.DelayMilliSeconds);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     Close();

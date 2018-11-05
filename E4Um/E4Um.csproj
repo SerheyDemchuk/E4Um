@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppSettings\ConfigProvider.cs" />
     <Compile Include="Helpers\OpenWindowService.cs" />
     <Compile Include="Helpers\DialogCloser.cs" />
     <Compile Include="Helpers\ReadFromFileService.cs" />

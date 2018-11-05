@@ -10,6 +10,7 @@ using System.Windows.Media.Animation;
 using E4Um.Views;
 using E4Um.ViewModels;
 using E4Um.Helpers;
+using E4Um.AppSettings;
 
 namespace E4Um.Helpers
 {
@@ -30,7 +31,7 @@ namespace E4Um.Helpers
         public void CreatePopUpWindow(string mode)
         {
             Point pt = SystemParameters.WorkArea.TopLeft;
-            PopUpWindow popUpWindow = new PopUpWindow("appear") { DataContext = new PopUpWindowModel(new OpenWindowService())};
+            PopUpWindow popUpWindow = new PopUpWindow("appear") { DataContext = new PopUpWindowModel(new OpenWindowService(), new ConfigProvider())};
 
             switch (mode)
             {
