@@ -15,7 +15,6 @@ namespace E4Um.ViewModels
     {
         Dictionary<string, double> words;
         string windowContent;
-
         public Dictionary<string, double> Words
         {
             get
@@ -51,7 +50,6 @@ namespace E4Um.ViewModels
             {
                 WordPairs.Add(kvp.Key);
             }
-
             this.windowService = windowService;
             this.configProvider = configProvider;
             CurrentRecord = 0;
@@ -64,33 +62,60 @@ namespace E4Um.ViewModels
 
         private void OpenWindow_Timer_Tick(object sender, EventArgs e)
         {
-            Task.Run(() =>
+            switch (configProvider.PopUpMode)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
+                case ("default"):
                     ChangeWindowContent();
-                    Open();
-                });
-            });
-            Task.Run(() =>
-            {
-                Thread.Sleep(configProvider.DelayMilliSeconds);
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    Close();
-                });
-            });
+                    break;
 
+                case ("appear"):
+                    Task.Run(() =>
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            ChangeWindowContent();
+                            Open();
+                        });
+                    });
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(configProvider.DelayMilliSeconds);
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            Close();
+                        });
+                    });
+                    break;
+
+                case ("popup"):
+                    Task.Run(() =>
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            Open();
+                        });
+                    });
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(configProvider.DelayMilliSeconds);
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            Close();
+                            ChangeWindowContent();
+                        });
+                    });
+                    break;
+            }
         }
 
         public void Open()
         {
-            windowService.ShowPopUpWindow("appear");
+            windowService.ShowPopUpWindow(configProvider.PopUpMode, configProvider.PopUpWidthToContent);
         }
 
         public void Close()
         {
-            windowService.HidePopUpWindow("appear");   
+            windowService.HidePopUpWindow(configProvider.PopUpMode);   
         }
 
         public void ChangeWindowContent()

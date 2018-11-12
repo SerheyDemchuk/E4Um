@@ -15,23 +15,30 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Interop;
+using System.ComponentModel;
 using E4Um.Views;
 using E4Um.ViewModels;
 using E4Um.Helpers;
-using System.ComponentModel;
+using E4Um.AppSettings;
+using MahApps.Metro.Controls;
 
 namespace E4Um
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         NotifyIcon nIcon = new NotifyIcon();
         ContextMenuStrip cMenuStrip = new ContextMenuStrip();
-        public MainWindow()
+        private readonly IConfigProvider configProvider;
+        private readonly IWindowService openWindowService;
+
+        public MainWindow(IConfigProvider configProvider, IWindowService openWindowService)
         {
             InitializeComponent();
+            this.configProvider = configProvider;
+            this.openWindowService = openWindowService;
 
             // Initialising tray icon
             nIcon.Icon = new Icon(@"../../Resources/uk.ico");
@@ -51,15 +58,15 @@ namespace E4Um
             // /Initialising context menu strip
         }
 
-        public void Open(IWindowService openWindowService)
+        public void Open()
         {
-            openWindowService.CreatePopUpWindow("appear");
+            openWindowService.CreatePopUpWindow(configProvider.PopUpMode, configProvider.DelayMilliSeconds, configProvider.PopUpWidthToContent);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Open(new OpenWindowService());
-            Hide();
+            Open();
+            //Hide();
         }
 
         private void nIcon_DoubleClick(object sender, EventArgs e)
@@ -81,6 +88,12 @@ namespace E4Um
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             nIcon.Visible = false;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            configProvider.SaveSettings();
+            base.OnClosing(e);
         }
     }
 }

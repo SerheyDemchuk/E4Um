@@ -16,8 +16,8 @@ namespace E4Um.Helpers
 {
     public interface IWindowService
     {
-        void CreatePopUpWindow(string mode);
-        void ShowPopUpWindow(string mode);
+        void CreatePopUpWindow(string mode, int delayMilliSeconds, string popUpSizeToContent);
+        void ShowPopUpWindow(string mode, string sizeToContent);
         void HidePopUpWindow(string mode);
         //void CreateMainWindow();
         //void ShowMainWindow();
@@ -28,14 +28,38 @@ namespace E4Um.Helpers
         //{
         //    _mainWidnow = mainWindow;
         //}
-        public void CreatePopUpWindow(string mode)
+        public void CreatePopUpWindow(string mode, int delayMilliSeconds, string popUpSizeToContent)
         {
             Point pt = SystemParameters.WorkArea.TopLeft;
-            PopUpWindow popUpWindow = new PopUpWindow("appear") { DataContext = new PopUpWindowModel(new OpenWindowService(), new ConfigProvider())};
+            PopUpWindow popUpWindow = new PopUpWindow(mode) { DataContext = new PopUpWindowModel(new OpenWindowService(), new ConfigProvider())};
 
             switch (mode)
             {
+                case "default":
+                    popUpWindow.Loaded += (object sender, RoutedEventArgs e) =>
+                    {
+                        pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+                        pt.Offset(-popUpWindow.Width, -popUpWindow.Height);
+                        popUpWindow.Left = pt.X - 5;
+                        popUpWindow.Top = pt.Y - 5;
+                        popUpWindow.Opacity = 1;
+                    };
+                    popUpWindow.ShowActivated = false;
+                    popUpWindow.Show();
+                    break;
                 case "appear":
+                    DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                    popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(delayMilliSeconds);
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            DoubleAnimation fadeOut = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
+                            popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+                        });
+                    });
                     popUpWindow.Loaded += (object sender, RoutedEventArgs e) =>
                     {
                         pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
@@ -64,7 +88,7 @@ namespace E4Um.Helpers
             
         }
 
-        public void ShowPopUpWindow(string mode)
+        public void ShowPopUpWindow(string mode, string sizeToContent)
         {
             Point pt = SystemParameters.WorkArea.TopLeft;
             Window popUpWindow = null;
@@ -80,16 +104,24 @@ namespace E4Um.Helpers
             switch (mode)
             {
                 case "appear":
-                    DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
-                    popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
-
-                    popUpWindow.SizeChanged += (object sender, SizeChangedEventArgs e) =>
+                    if (sizeToContent == "Width")
                     {
-                        pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
-                        pt.Offset(-popUpWindow.ActualWidth, -popUpWindow.ActualHeight);
-                        popUpWindow.Left = pt.X - 5;
-                        popUpWindow.Top = pt.Y - 5;
-                    };
+                        DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                        popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+
+                        popUpWindow.SizeChanged += (object sender, SizeChangedEventArgs e) =>
+                        {
+                            pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+                            pt.Offset(-popUpWindow.ActualWidth, -popUpWindow.ActualHeight);
+                            popUpWindow.Left = pt.X - 5;
+                            popUpWindow.Top = pt.Y - 5;
+                        };
+                    }
+                    else 
+                    {
+                        DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+                        popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+                    }
 
                     break;
                 case "popup":

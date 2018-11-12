@@ -17,55 +17,70 @@ namespace E4Um.Views
         {
             InitializeComponent();
             
-            Task.Run(() =>
-            {
-                showWindow(mode);
-                closeWindow(mode);
-            });
+            //Task.Run(() =>
+            //{
+            //    showWindow(mode);
+            //    //closeWindow(mode);
+            //});
 
         }
 
-        public void showWindow(string mode)
+        //public void showWindow(string mode)
+        //{
+        //    Dispatcher.Invoke(() =>
+        //    {
+        //        switch (mode)
+        //        {
+        //            case "default":
+        //                DoubleAnimation animation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+        //                BeginAnimation(OpacityProperty, animation);
+        //                break;
+
+        //            case "appear":
+        //                DoubleAnimation animation1 = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+        //                BeginAnimation(OpacityProperty, animation1);
+        //                break;
+
+        //            case "popup":
+        //                for (int i = 0; i < Height + 5; i++)
+        //                {
+        //                    Dispatcher.Invoke((() =>
+        //                    {
+        //                        Top = Top - 1;
+        //                    }));
+        //                }
+        //                break;
+        //        }
+        //    });
+        //}
+
+        //public void closeWindow(string mode)
+        //{
+        //    Thread.Sleep(1000);
+        //    Dispatcher.Invoke(() =>
+        //    {
+
+        //        DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
+        //        BeginAnimation(OpacityProperty, animation);
+
+        //        if (mode == "popup")
+        //        {
+        //            Top += Height + 45;
+        //            BeginAnimation(OpacityProperty, null);
+        //        }
+        //    });
+        //}
+
+        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Dispatcher.Invoke(() =>
-            {
-                switch (mode)
-                {
-                    case "appear":
-                        DoubleAnimation animation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
-                        BeginAnimation(OpacityProperty, animation);
-                        break;
-
-                    case "popup":
-                        for (int i = 0; i < Height + 5; i++)
-                        {
-                            Dispatcher.Invoke((() =>
-                            {
-                                Top = Top - 1;
-                            }));
-                        }
-                        break;
-                }
-            });
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
         }
 
-        public void closeWindow(string mode)
+        private void Window_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
-            Thread.Sleep(1000);
-            Dispatcher.Invoke(() =>
-            {
-
-                DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
-                BeginAnimation(OpacityProperty, animation);
-
-                if (mode == "popup")
-                {
-                    Top += Height + 45;
-                    BeginAnimation(OpacityProperty, null);
-                }
-            });
+            MessageBox.Show(sender.ToString());
         }
-
     }
 }
 

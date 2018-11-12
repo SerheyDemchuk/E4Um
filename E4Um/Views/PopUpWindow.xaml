@@ -4,15 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:E4Um.ViewModels"
+        xmlns:p="clr-namespace:E4Um.AppSettings"
+        xmlns:con="clr-namespace:E4Um.Converters"
         mc:Ignorable="d"
-        Title="PopUp" Height="80" Width="300" ResizeMode="NoResize" Background="#FFFFF2A3" Topmost="True" Margin="0,0,0,0" ShowInTaskbar="False" SizeToContent="Width" WindowStyle="None" AllowsTransparency="True">
-
+        Title="PopUp" 
+        Width="300" 
+        Height="80" 
+        Background="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpBackground, Converter={StaticResource ColorToSolidColorBrush_ValueConverter}, Mode=TwoWay}" 
+        SizeToContent="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidthToContent, Mode=OneWay}" 
+        ResizeMode="NoResize" Topmost="True" Margin="0,0,0,0" ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True" MouseLeftButtonDown="Window_MouseLeftButtonDown" >
     <Grid>
 
+        <!--Width="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidth, Mode=TwoWay}" 
+        Height="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpHeight, Mode=TwoWay}"-->
+        
         <!--<ItemsControl x:Name="dictionaryItemsControl" ItemsSource="{Binding Words}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>-->
-        <Label x:Name="label" Content="{Binding WindowContent}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36"  />
+        <Label x:Name="label" Content="{Binding WindowContent}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36" />
         <!--</DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>-->

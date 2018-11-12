@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Configuration;
+using System.Windows.Media;
+using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using E4Um.ViewModels;
 
 namespace E4Um.AppSettings
 {
     public interface IConfigProvider
     {
         bool IsTestEnabled { get; set; }
+        string PopUpMode { get; set; }
         double PopUpWidth { get; set; }
         double PopUpHeight { get; set; }
+        Color PopUpBackground { get; set; }
+        string PopUpWidthToContent { get; set; }
         double SecondsToOpen { get; set; }
         int DelayMilliSeconds { get; set; }
         void SaveSettings();   
@@ -32,6 +38,14 @@ namespace E4Um.AppSettings
         }
 
         [UserScopedSetting()]
+        [DefaultSettingValue("default")]
+        public string PopUpMode
+        {
+            get { return (string)this["PopUpMode"]; }
+            set { this["PopUpMode"] = value; }
+        }
+
+        [UserScopedSetting()]
         [DefaultSettingValue("300")]
         public double PopUpWidth
         {
@@ -45,6 +59,22 @@ namespace E4Um.AppSettings
         {
             get { return (double)this["PopUpHeight"]; }
             set { this["PopUpHeight"] = value; }
+        }
+
+        [UserScopedSetting()]
+        [DefaultSettingValue("#FFFFF2A3")]
+        public Color PopUpBackground
+        {
+            get { return (Color)this["PopUpBackground"]; }
+            set { this["PopUpBackground"] = value; }
+        }
+
+        [UserScopedSetting()]
+        [DefaultSettingValue("Width")]
+        public string PopUpWidthToContent
+        {
+            get { return (string)this["PopUpWidthToContent"]; }
+            set { this["PopUpWidthToContent"] = value; }
         }
 
         [UserScopedSetting()]

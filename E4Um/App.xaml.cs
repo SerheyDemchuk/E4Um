@@ -1,6 +1,7 @@
 ﻿using System.Windows;
-using E4Um.ViewModels;
+using E4Um.AppSettings;
 using E4Um.Helpers;
+using E4Um.ViewModels;
 
 namespace E4Um
 {
@@ -14,7 +15,7 @@ namespace E4Um
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            new MainWindow() { DataContext = mainVM }.Show();
+            new MainWindow(new ConfigProvider(), new OpenWindowService()) { DataContext = mainVM }.Show();
         }
 
     }
