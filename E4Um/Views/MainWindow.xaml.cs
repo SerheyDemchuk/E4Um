@@ -31,14 +31,13 @@ namespace E4Um
     {
         NotifyIcon nIcon = new NotifyIcon();
         ContextMenuStrip cMenuStrip = new ContextMenuStrip();
-        private readonly IConfigProvider configProvider;
-        private readonly IWindowService openWindowService;
 
-        public MainWindow(IConfigProvider configProvider, IWindowService openWindowService)
+        IConfigProvider configProvider;
+
+        public MainWindow(IConfigProvider configProvider)
         {
             InitializeComponent();
             this.configProvider = configProvider;
-            this.openWindowService = openWindowService;
 
             // Initialising tray icon
             nIcon.Icon = new Icon(@"../../Resources/uk.ico");
@@ -56,17 +55,15 @@ namespace E4Um
             cMenuStrip.Items[3].Click += new EventHandler(cMenuStripItems2_Click);
             nIcon.ContextMenuStrip = cMenuStrip;
             // /Initialising context menu strip
-        }
 
-        public void Open()
-        {
-            openWindowService.CreatePopUpWindow(configProvider.PopUpMode, configProvider.DelayMilliSeconds, configProvider.PopUpWidthToContent);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Open();
-            //Hide();
+            //Binding
+            //Source={x:Static p:ConfigProvider.Default}, Path=PopUpFontType, Mode=TwoWay}
+            //System.Windows.Data.Binding myBinding = new System.Windows.Data.Binding();
+            //myBinding.Source = ConfigProvider.Default;
+            //myBinding.Path = new PropertyPath("PopUpFontType");
+            //myBinding.Mode = BindingMode.TwoWay;
+            //BindingOperations.SetBinding(txtText, TextBox.TextProperty, myBinding);
+            // /Binding
         }
 
         private void nIcon_DoubleClick(object sender, EventArgs e)
@@ -95,5 +92,6 @@ namespace E4Um
             configProvider.SaveSettings();
             base.OnClosing(e);
         }
+
     }
 }

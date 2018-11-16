@@ -4,6 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using E4Um.Models;
 using E4Um.Views;
 using E4Um.Helpers;
@@ -15,6 +18,21 @@ namespace E4Um.ViewModels
     {
         Dictionary<string, double> words;
         string windowContent;
+        ////////////////
+        FontFamily fontType;
+        public FontFamily FontType
+        {
+            get
+            {
+                return fontType;
+            }
+            set
+            {
+                fontType = value;
+                NotifyPropertyChanged();
+            }
+        }
+        ////////////////
         public Dictionary<string, double> Words
         {
             get
@@ -40,16 +58,25 @@ namespace E4Um.ViewModels
 
         private readonly IWindowService windowService;
         private readonly IConfigProvider configProvider;
+        //private readonly ISessionContext sessionContext;
 
         DispatcherTimer openWindowTimer;
 
         public PopUpWindowModel(IWindowService windowService, IConfigProvider configProvider)
         {
+            //this.sessionContext = sessionContext;
+            //SessionContext sContext = new SessionContext();
+            //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
+            SessionContext.PropertyChanged += SessionContext_PropertyChanged;
+            //this.sessionContext.WindowFont = new FontFamily("Impact");
+            //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
+            //FontType = new FontFamily("Impact");
             WordPairs = new List<string>();
             foreach (KeyValuePair<string, double> kvp in Words)
             {
                 WordPairs.Add(kvp.Key);
             }
+
             this.windowService = windowService;
             this.configProvider = configProvider;
             CurrentRecord = 0;
@@ -60,8 +87,17 @@ namespace E4Um.ViewModels
             openWindowTimer.Start();
         }
 
+        private void SessionContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "PopUpFontType")
+            {   
+                FontType = SessionContext.PopUpFontType;
+            }
+        }
+
         private void OpenWindow_Timer_Tick(object sender, EventArgs e)
         {
+            //FontType = FontsList[CurrentRecord];
             switch (configProvider.PopUpMode)
             {
                 case ("default"):
@@ -110,7 +146,7 @@ namespace E4Um.ViewModels
 
         public void Open()
         {
-            windowService.ShowPopUpWindow(configProvider.PopUpMode, configProvider.PopUpWidthToContent);
+            windowService.ShowPopUpWindow(configProvider.PopUpMode);
         }
 
         public void Close()
@@ -133,6 +169,53 @@ namespace E4Um.ViewModels
                 CurrentRecord++;
             }
 
+        }
+    }
+    //public interface ISessionContext
+    //{
+    //    FontFamily WindowFont { get; set; }
+    //}
+
+    public static class SessionContext
+    {
+        static FontFamily popUpFontType;
+        static double popUpFontSize;
+        public static FontFamily PopUpFontType
+        {
+            get
+            {
+                return popUpFontType;
+            }
+            set
+            {
+                popUpFontType = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public static double PopUpFontSize
+        {
+            get
+            {
+                return popUpFontSize;
+            }
+            set
+            {
+                popUpFontSize = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public static event PropertyChangedEventHandler PropertyChanged;
+
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
+        private static void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(null, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

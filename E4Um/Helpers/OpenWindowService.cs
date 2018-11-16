@@ -17,7 +17,7 @@ namespace E4Um.Helpers
     public interface IWindowService
     {
         void CreatePopUpWindow(string mode, int delayMilliSeconds, string popUpSizeToContent);
-        void ShowPopUpWindow(string mode, string sizeToContent);
+        void ShowPopUpWindow(string mode);
         void HidePopUpWindow(string mode);
         //void CreateMainWindow();
         //void ShowMainWindow();
@@ -88,7 +88,7 @@ namespace E4Um.Helpers
             
         }
 
-        public void ShowPopUpWindow(string mode, string sizeToContent)
+        public void ShowPopUpWindow(string mode)
         {
             Point pt = SystemParameters.WorkArea.TopLeft;
             Window popUpWindow = null;
@@ -104,20 +104,22 @@ namespace E4Um.Helpers
             switch (mode)
             {
                 case "appear":
-                    if (sizeToContent == "Width")
+                    if (popUpWindow.SizeToContent.ToString() == "Width")
                     {
                         DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
                         popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
 
                         popUpWindow.SizeChanged += (object sender, SizeChangedEventArgs e) =>
                         {
+                            pt.X = 0;
+                            pt.Y = 0;
                             pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
                             pt.Offset(-popUpWindow.ActualWidth, -popUpWindow.ActualHeight);
                             popUpWindow.Left = pt.X - 5;
                             popUpWindow.Top = pt.Y - 5;
                         };
                     }
-                    else 
+                    else if(popUpWindow.SizeToContent.ToString() == "Manual")
                     {
                         DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
                         popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);

@@ -10,12 +10,12 @@ namespace E4Um
     /// </summary>
     public partial class App : Application
     {
-        MainWindowModel mainVM = new MainWindowModel();
+        MainWindowModel mainVM = new MainWindowModel(new ConfigProvider(), new OpenWindowService());
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            new MainWindow(new ConfigProvider(), new OpenWindowService()) { DataContext = mainVM }.Show();
+            new MainWindow(new ConfigProvider()) { DataContext = mainVM }.Show();
         }
 
     }

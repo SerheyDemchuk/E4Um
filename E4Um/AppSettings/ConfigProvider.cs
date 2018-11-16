@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using System.Windows.Media;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +22,9 @@ namespace E4Um.AppSettings
         string PopUpWidthToContent { get; set; }
         double SecondsToOpen { get; set; }
         int DelayMilliSeconds { get; set; }
-        void SaveSettings();   
+        void SaveSettings();
     }
-    class ConfigProvider : ApplicationSettingsBase, IConfigProvider
+    public class ConfigProvider : ApplicationSettingsBase, IConfigProvider, INotifyPropertyChanged
     {
         private static ConfigProvider defaultInstance = ((ConfigProvider)(Synchronized(new ConfigProvider())));
         public static ConfigProvider Default
@@ -38,11 +40,16 @@ namespace E4Um.AppSettings
         }
 
         [UserScopedSetting()]
-        [DefaultSettingValue("default")]
+        [DefaultSettingValue("appear")]
         public string PopUpMode
         {
             get { return (string)this["PopUpMode"]; }
-            set { this["PopUpMode"] = value; }
+            set
+            {
+                this["PopUpMode"] = value;
+                if (value == "default")
+                    PopUpWidthToContent = "Manual";
+            }
         }
 
         [UserScopedSetting()]
@@ -97,5 +104,6 @@ namespace E4Um.AppSettings
         {
             Default.Save();
         }
+
     }
 }

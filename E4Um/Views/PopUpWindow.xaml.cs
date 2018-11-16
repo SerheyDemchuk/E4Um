@@ -77,10 +77,6 @@ namespace E4Um.Views
             DragMove();
         }
 
-        private void Window_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
-        {
-            MessageBox.Show(sender.ToString());
-        }
     }
 }
 

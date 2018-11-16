@@ -28,10 +28,9 @@
             <Grid Background="#FFE5E5E5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="280*"/>
-                    <ColumnDefinition Width="280"/>
+                    <ColumnDefinition Width="280*"/>
                 </Grid.ColumnDefinitions>
-                <Button Width="70" Height="20" Click="Button_Click" Content="Click me!" Grid.Column="1" />
-                <GroupBox Grid.Column="0" x:Name="groupBox" Header="Размеры" Margin="10,10,10,0" VerticalAlignment="Top" Height="195">
+                <GroupBox Grid.Column="0" x:Name="SizesGroupBox" Header="Размеры" Margin="10,10,10,0" VerticalAlignment="Top" Height="195">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>
@@ -51,6 +50,29 @@
                         <Slider x:Name="height_slider" Grid.Row="1" Grid.Column="1" Width="125" Margin="14,7,4,6" AutoToolTipPlacement="TopLeft" Minimum="40" Maximum="300" Value="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpHeight, Mode=TwoWay}" />
                         <Controls:ToggleSwitchButton Grid.Row="2" Grid.Column="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" IsChecked="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidthToContent, Converter={StaticResource SizeToContentToBooleanToggleSwitchButtonValueConverter}, Mode=TwoWay}" IsEnabled="True"/>
                         <cp:ColorPicker x:Name="ClrPcker_Background" Grid.Row="3" Grid.Column="1" Margin="17,10,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="125" SelectedColor="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpBackground, Mode=TwoWay}" />
+                    </Grid>
+                </GroupBox>
+                <Button Width="70" Height="20" Content="Click me!" Command="{Binding OpenPopUpWindowCommand}" />
+                <GroupBox Grid.Column="1" x:Name="FontsGroupBox" Header="Текст" Margin="10,10,10,0" VerticalAlignment="Top" Height="195">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="34"/>
+                            <RowDefinition Height="34"/>
+                            <RowDefinition Height="56"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="105*"/>
+                            <ColumnDefinition Width="154*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="Term" Text="Шрифт" TextAlignment="Center" Margin="0,15,0,7" />
+                        <TextBlock x:Name="TermCase" Grid.Row="1" Text="Заглавные буквы" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,8,0,9" />
+                        <TextBlock x:Name="Translation" Grid.Row="2" Grid.Column="0" Text="Шрифт" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,8,0,9" />
+                        <TextBlock x:Name="TranslationCase" Grid.Row="3" Grid.Column="0" Text="Заглавные буквы" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,11,0,28" />
+                        <Button Width="80" Height="25" Grid.Column="1" Content="Термин" Command="{Binding OpenFontDialogCommand}" Margin="23,11,23,0" Padding="0" VerticalAlignment="Top"/>
+                        <Controls:ToggleSwitchButton Grid.Row="1" Grid.Column="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" IsChecked="False" />
+                        <Button Width="80" Height="25" Grid.Row="2" Grid.Column="1" Content="Перевод" Command="{Binding OpenFontDialogCommand}" Margin="23,5,23,0" Padding="0" VerticalAlignment="Top" />
+                        <Controls:ToggleSwitchButton Grid.Row="3" Grid.Column="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" IsChecked="False" Margin="43,5,43,0" VerticalAlignment="Top" />
                     </Grid>
                 </GroupBox>
             </Grid>
