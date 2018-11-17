@@ -14,20 +14,20 @@ namespace E4Um.ViewModels
 {
     class MainWindowModel : ViewModelBase
     {
-        //FontFamily fontType;
-        
-        //public FontFamily FontType
-        //{
-        //    get
-        //    {
-        //        return fontType;
-        //    }
-        //    set
-        //    {
-        //        fontType = value;
-        //        NotifyPropertyChanged("FontType");
-        //    }
-        //}
+        FontFamily fontType;
+
+        public FontFamily FontType
+        {
+            get
+            {
+                return fontType;
+            }
+            set
+            {
+                fontType = value;
+                NotifyPropertyChanged("FontType");
+            }
+        }
 
         public RelayCommand OpenPopUpWindowCommand { get; set; }
         public RelayCommand OpenFontDialogCommand { get; set; }
@@ -50,33 +50,38 @@ namespace E4Um.ViewModels
         {
             openWindowService.CreatePopUpWindow(configProvider.PopUpMode, configProvider.DelayMilliSeconds, configProvider.PopUpWidthToContent);
         }
-
+        
         public void OpenFontDialogCommand_Execute(object parameter)
         {
             FontDialog fontDialog = new FontDialog();
             fontDialog.ShowColor = true;
+            string fontFamily = SessionContext.PopUpFontType.ToString();
+            float fontSize = (float)SessionContext.PopUpFontSize;
+            System.Drawing.FontStyle fontStyle = SessionContext.PopUpFontStyle;
+
+            fontDialog.Font = new System.Drawing.Font(fontFamily, fontSize, fontStyle);
+            
             var result = fontDialog.ShowDialog();
-            if(result == DialogResult.OK)
+            if( result == DialogResult.OK)
             {
                 //configProvider.PopUpFontFamily 
                 //configProvider.PopUpFontType 
-
+                System.Drawing.Font f = fontDialog.Font;
 
                 SessionContext.PopUpFontType = new FontFamily(fontDialog.Font.Name);
+                SessionContext.PopUpFontSize = fontDialog.Font.Size * 96.0 / 72.0;
 
-                //configProvider.PopUpFontType = new FontFamily(fontDialog.Font.Name);
-                
                 //FontFamily ff = new FontFamily(fontDialog.Font.Name);
                 //sessionC+on.PropertyChanged += SessionContext_PropertyChanged;
                 //sessionCon.WindowFont = FontType;
-                
+
                 //popUpWindowModel.FontType = new FontFamily(fontDialog.Font.Name);
 
                 //configProvider.PopUpFontSizees = fontDialog.Font.Size * 96.0 / 72.0;
 
                 //configProvider.PopUpFontWeight = fontDialog.Font.Bold ? "Bold" : "Normal";
                 //configProvider.PopUpFontStyle = fontDialog.Font.Italic ? "Italic" : "Normal";
-                
+
                 //System.Windows.Data.Binding myBinding = new System.Windows.Data.Binding();
                 //myBinding.Source = ConfigProvider.Default;
                 //myBinding.Path = new PropertyPath("PopUpFontType");
@@ -85,6 +90,11 @@ namespace E4Um.ViewModels
             }
         }
 
+        //public System.Drawing.FontStyle StyleConverter(string fontStyle, string fontWeight)
+        //{
+        //    System.Drawing.FontStyle resultFontStyle = new System.Drawing.FontStyle();
+
+        //}
         //public void Open(object parameter)
         //{
         //    PopUpWindow popup = new PopUpWindow("appear");

@@ -8,26 +8,46 @@
         xmlns:con="clr-namespace:E4Um.Converters"
         mc:Ignorable="d"
         Title="PopUp" 
-        Width="300" 
+        Width="700" 
         Height="80" 
         Background="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpBackground, Converter={StaticResource ColorToSolidColorBrush_ValueConverter}, Mode=TwoWay}" 
         SizeToContent="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidthToContent, Mode=TwoWay}" 
         ResizeMode="NoResize" Topmost="True" Margin="0,0,0,0" ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True" MouseLeftButtonDown="Window_MouseLeftButtonDown" 
-        FontFamily="{Binding FontType}"
         FontSize="36">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-        <!--Width="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidth, Mode=TwoWay}" 
-        Height="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpHeight, Mode=TwoWay}"-->
-        
-        <!--<ItemsControl x:Name="dictionaryItemsControl" ItemsSource="{Binding Words}">
+        <Grid HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--<ItemsControl x:Name="dictionaryItemsControl" ItemsSource="{Binding Words}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>-->
-        <Label x:Name="label" Content="{Binding WindowContent}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-               
-        <!--</DataTemplate>
+
+            <!--Width="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidth, Mode=TwoWay}" 
+        Height="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpHeight, Mode=TwoWay}"-->
+
+            <TextBlock x:Name="TermBlock" Text="{Binding WindowContentTerm}" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="{Binding FontType}"/>
+            <TextBlock x:Name="TranslationBlock" Grid.Column="1" Text="{Binding WindowContentTranslation}" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" />
+            <!--<TextBlock.Text>
+                <MultiBinding StringFormat="{}{0} {1}">
+                    <Binding Path="WindowContentTerm" />
+                    <Binding Path="WindowContentTranslation" />
+                </MultiBinding>
+            </TextBlock.Text>-->
+
+            <!--<Run Text="{Binding WindowContentTerm}" />
+             <Run Text="{Binding WindowContentTranslation}"/>-->
+
+            <!--</DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>-->
 
+        </Grid>
     </Grid>
 </Window>

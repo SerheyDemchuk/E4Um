@@ -17,7 +17,8 @@ namespace E4Um.ViewModels
     class PopUpWindowModel : ViewModelBase
     {
         Dictionary<string, double> words;
-        string windowContent;
+        string windowContentTerm;
+        string windowContentTranslation;
         ////////////////
         FontFamily fontType;
         public FontFamily FontType
@@ -42,17 +43,29 @@ namespace E4Um.ViewModels
             }
         }
 
-        public string WindowContent
+        public string WindowContentTerm
         {
-            get { return windowContent; }
+            get { return windowContentTerm; }
             set
             {
-                windowContent = value;
-                NotifyPropertyChanged("WindowContent");
+                windowContentTerm = value;
+                NotifyPropertyChanged();
             }
         }
 
-        public List<string> WordPairs { get; set; }
+        public string WindowContentTranslation
+        {
+            get { return windowContentTranslation; }
+            set
+            {
+                windowContentTranslation = value;
+                NotifyPropertyChanged();
+            }
+        }
+        
+        public List<string> TermTranslation { get; set; }
+        public List<string> Term { get; set; }
+        public List<string> Translation { get; set; }
 
         public int CurrentRecord { get; set; }
 
@@ -71,15 +84,19 @@ namespace E4Um.ViewModels
             //this.sessionContext.WindowFont = new FontFamily("Impact");
             //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
             //FontType = new FontFamily("Impact");
-            WordPairs = new List<string>();
+            TermTranslation = new List<string>();
+            Term = new List<string>();
+            Translation = new List<string>();
+
             foreach (KeyValuePair<string, double> kvp in Words)
             {
-                WordPairs.Add(kvp.Key);
+                TermTranslation.Add(kvp.Key);
             }
 
             this.windowService = windowService;
             this.configProvider = configProvider;
             CurrentRecord = 0;
+            StringSlicer();
             ChangeWindowContent();
             openWindowTimer = new DispatcherTimer();
             openWindowTimer.Interval = TimeSpan.FromSeconds(this.configProvider.SecondsToOpen);
@@ -154,18 +171,42 @@ namespace E4Um.ViewModels
             windowService.HidePopUpWindow(configProvider.PopUpMode);   
         }
 
+        public void StringSlicer()
+        {
+            foreach(string str in TermTranslation)
+            {
+                int index = str.IndexOf(" - ");
+                if(index != -1)
+                {
+                    int translationLength = str.Length - 2 - index;
+                    Term.Add(str.Substring(0, index + 2));
+                    Translation.Add(str.Substring(index + 2, translationLength));
+                }
+                else
+                {
+                    int secondIndex = str.IndexOf("-");
+                    int translationLength = str.Length - 1 - secondIndex;
+                    Term.Add(str.Substring(0, secondIndex + 1));
+                    Translation.Add(str.Substring(secondIndex + 1, translationLength));
+                }
+                
+            }
+        }
+
         public void ChangeWindowContent()
         {
             
-           if (CurrentRecord != WordPairs.Count)
+           if (CurrentRecord != TermTranslation.Count)
            {
-                WindowContent = WordPairs[CurrentRecord];
+                WindowContentTerm = Term[CurrentRecord];
+                WindowContentTranslation = Translation[CurrentRecord];
                 CurrentRecord++;
            }
            else
             {
                 CurrentRecord = 0;
-                WindowContent = WordPairs[CurrentRecord];
+                WindowContentTerm = Term[CurrentRecord];
+                WindowContentTranslation = Translation[CurrentRecord];
                 CurrentRecord++;
             }
 
@@ -180,6 +221,7 @@ namespace E4Um.ViewModels
     {
         static FontFamily popUpFontType;
         static double popUpFontSize;
+        static System.Drawing.FontStyle popUpFontStyle;
         public static FontFamily PopUpFontType
         {
             get
@@ -201,6 +243,18 @@ namespace E4Um.ViewModels
             set
             {
                 popUpFontSize = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public static System.Drawing.FontStyle PopUpFontStyle
+        {
+            get
+            {
+                return popUpFontStyle;
+            }
+            set
+            {
+                popUpFontStyle = value;
                 NotifyPropertyChanged();
             }
         }
