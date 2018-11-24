@@ -8,12 +8,17 @@
         xmlns:con="clr-namespace:E4Um.Converters"
         mc:Ignorable="d"
         Title="PopUp" 
-        Width="700" 
-        Height="80" 
+        Width="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidth, Mode=TwoWay}" 
+        Height="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpHeight, Mode=TwoWay}" 
         Background="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpBackground, Converter={StaticResource ColorToSolidColorBrush_ValueConverter}, Mode=TwoWay}" 
         SizeToContent="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidthToContent, Mode=TwoWay}" 
         ResizeMode="NoResize" Topmost="True" Margin="0,0,0,0" ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True" MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         FontSize="36">
+    <Window.Resources>
+        <con:SystemDrawingToSystemWindowsFontStyleValueConverter x:Key="SystemDrawingToSystemWindowsFontStyleValueConverter" />
+        <con:SystemDrawingToSystemWindowsFontWeightValueConverter x:Key="SystemDrawingToSystemWindowsFontWeightValueConverter" />
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -29,11 +34,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>-->
 
-            <!--Width="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidth, Mode=TwoWay}" 
-        Height="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpHeight, Mode=TwoWay}"-->
-
-            <TextBlock x:Name="TermBlock" Text="{Binding WindowContentTerm}" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="{Binding FontType}"/>
-            <TextBlock x:Name="TranslationBlock" Grid.Column="1" Text="{Binding WindowContentTranslation}" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" />
+            <TextBlock x:Name="TermBlock" Text="{Binding WindowContentTerm}" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="{Binding TermFontType}" FontSize="{Binding TermFontSize}" FontStyle="{Binding TermFontStyle, Converter={StaticResource SystemDrawingToSystemWindowsFontStyleValueConverter}}" FontWeight="{Binding TermFontStyle, Converter={StaticResource SystemDrawingToSystemWindowsFontWeightValueConverter}}" />
+            <TextBlock x:Name="TranslationBlock" Grid.Column="1" Text="{Binding WindowContentTranslation}" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontFamily="{Binding TranslationFontType}" FontSize="{Binding TranslationFontSize}" FontStyle="{Binding TranslationFontStyle, Converter={StaticResource SystemDrawingToSystemWindowsFontStyleValueConverter}}" FontWeight="{Binding TranslationFontStyle, Converter={StaticResource SystemDrawingToSystemWindowsFontWeightValueConverter}}" />
             <!--<TextBlock.Text>
                 <MultiBinding StringFormat="{}{0} {1}">
                     <Binding Path="WindowContentTerm" />

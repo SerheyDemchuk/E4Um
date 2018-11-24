@@ -19,12 +19,13 @@ namespace E4Um.AppSettings
         double PopUpWidth { get; set; }
         double PopUpHeight { get; set; }
         Color PopUpBackground { get; set; }
+        FontFamily PopUpFontType { get; set; }
         string PopUpWidthToContent { get; set; }
         double SecondsToOpen { get; set; }
         int DelayMilliSeconds { get; set; }
         void SaveSettings();
     }
-    public class ConfigProvider : ApplicationSettingsBase, IConfigProvider, INotifyPropertyChanged
+    public class ConfigProvider : ApplicationSettingsBase, IConfigProvider
     {
         private static ConfigProvider defaultInstance = ((ConfigProvider)(Synchronized(new ConfigProvider())));
         public static ConfigProvider Default
@@ -74,6 +75,14 @@ namespace E4Um.AppSettings
         {
             get { return (Color)this["PopUpBackground"]; }
             set { this["PopUpBackground"] = value; }
+        }
+
+        [UserScopedSetting()]
+        [DefaultSettingValue("Segoe UI")]
+        public FontFamily PopUpFontType
+        {
+            get { return (FontFamily)this["PopUpFontType"]; }
+            set { this["PopUpFontType"] = value; }
         }
 
         [UserScopedSetting()]

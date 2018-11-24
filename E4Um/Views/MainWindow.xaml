@@ -13,6 +13,7 @@
         Title="English For You" Height="435" Width="565" ResizeMode="CanMinimize" ShowMaxRestoreButton="False"
         helpers:DialogCloser.DialogResult="{Binding CloseWindowFlag}" Closing="Window_Closing">
     <Window.Resources>
+        <p:StaticConfigProvider x:Key="staticConfigProvider" />
         <con:SizeToContentToBooleanSliderValueConverter x:Key="SizeToContentToBooleanSliderValueConverter" />
         <con:SizeToContentToBooleanToggleSwitchButtonValueConverter x:Key="SizeToContentToBooleanToggleSwitchButtonValueConverter" />
         <Style x:Key="MetroToggleSwitchButton" TargetType="{x:Type Controls:ToggleSwitchButton}" />
@@ -69,10 +70,10 @@
                         <TextBlock x:Name="TermCase" Grid.Row="1" Text="Заглавные буквы" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,8,0,9" />
                         <TextBlock x:Name="Translation" Grid.Row="2" Grid.Column="0" Text="Шрифт" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,8,0,9" />
                         <TextBlock x:Name="TranslationCase" Grid.Row="3" Grid.Column="0" Text="Заглавные буквы" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,11,0,28" />
-                        <Button Width="80" Height="25" Grid.Column="1" Content="Термин" Command="{Binding OpenFontDialogCommand}" Margin="23,11,23,0" Padding="0" VerticalAlignment="Top"/>
-                        <Controls:ToggleSwitchButton Grid.Row="1" Grid.Column="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" IsChecked="False" />
-                        <Button Width="80" Height="25" Grid.Row="2" Grid.Column="1" Content="Перевод" Command="{Binding OpenFontDialogCommand}" Margin="23,5,23,0" Padding="0" VerticalAlignment="Top" />
-                        <Controls:ToggleSwitchButton Grid.Row="3" Grid.Column="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" IsChecked="False" Margin="43,5,43,0" VerticalAlignment="Top" />
+                        <Button Width="80" Height="25" Grid.Column="1" Content="Термин" Command="{Binding OpenTermFontDialogCommand}" Margin="23,11,23,0" Padding="0" VerticalAlignment="Top"/>
+                        <Controls:ToggleSwitchButton Grid.Row="1" Grid.Column="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" IsChecked="{Binding Source={StaticResource staticConfigProvider}, Path=IsTermUpper, Mode=TwoWay}" />
+                        <Button Width="80" Height="25" Grid.Row="2" Grid.Column="1" Content="Перевод" Command="{Binding OpenTranslationFontDialogCommand}" Margin="23,5,23,0" Padding="0" VerticalAlignment="Top" />
+                        <Controls:ToggleSwitchButton Grid.Row="3" Grid.Column="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" IsChecked="{Binding Source={StaticResource staticConfigProvider}, Path=IsTranslationUpper, Mode=TwoWay}" Margin="43,5,43,0" VerticalAlignment="Top" />
                     </Grid>
                 </GroupBox>
             </Grid>

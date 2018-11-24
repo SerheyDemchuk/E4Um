@@ -90,6 +90,7 @@ namespace E4Um
         protected override void OnClosing(CancelEventArgs e)
         {
             configProvider.SaveSettings();
+            StaticConfigProvider.SaveSettings();
             base.OnClosing(e);
         }
 
