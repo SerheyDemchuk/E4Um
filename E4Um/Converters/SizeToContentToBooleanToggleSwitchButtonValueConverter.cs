@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Data;
-using System.Windows.Media;
+using E4Um.AppSettings;
 
 namespace E4Um.Converters
 {
@@ -12,7 +12,7 @@ namespace E4Um.Converters
             {
                 return null;
             }
-            // For a more sophisticated converter, check also the targetType and react accordingly..
+
             if (value is string)
             {
                 string widthToContent = (string)value;
@@ -21,8 +21,6 @@ namespace E4Um.Converters
                 else if (widthToContent == "Manual")
                     return false;
             }
-            // You can support here more source types if you wish
-            // For the example I throw an exception
 
             Type type = value.GetType();
             throw new InvalidOperationException("Unsupported type [" + type.Name + "]");

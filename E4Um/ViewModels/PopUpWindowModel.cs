@@ -18,6 +18,7 @@ namespace E4Um.ViewModels
         Dictionary<string, double> words;
         string windowContentTerm;
         string windowContentTranslation;
+        string popUpWidthToContent;
         
         #region FontSettingProperties
         FontFamily termFontType;
@@ -137,6 +138,9 @@ namespace E4Um.ViewModels
         private readonly IWindowService windowService;
         private readonly IConfigProvider configProvider;
 
+        int SecondsToOpen { get; set; }
+        int DelayMilliSeconds { get; set; }
+
         DispatcherTimer openWindowTimer;
 
         public PopUpWindowModel(IWindowService windowService, IConfigProvider configProvider)
@@ -147,7 +151,7 @@ namespace E4Um.ViewModels
             //StaticConfigProvider.PropertyChanged += SessionContext_PropertyChanged;
             //this.sessionContext.WindowFont = new FontFamily("Impact");
             //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
-            //FontType = new FontFamily("Impact"); 
+            //FontType = new FontFamily("Impact");
             TermTranslation = new List<string>();
             Term = new List<string>();
             Translation = new List<string>();
@@ -172,16 +176,27 @@ namespace E4Um.ViewModels
             StringSlicer(StaticConfigProvider.IsTermUpper, StaticConfigProvider.IsTranslationUpper);
             ChangeWindowContent();
 
+            SecondsToOpen = StaticConfigProvider.SecondsToOpen + (int)StaticConfigProvider.DelayMilliSeconds;
+            DelayMilliSeconds = (int)StaticConfigProvider.DelayMilliSeconds * 1000;
             openWindowTimer = new DispatcherTimer();
-            openWindowTimer.Interval = TimeSpan.FromSeconds(this.configProvider.SecondsToOpen);
+            openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen);
             openWindowTimer.Tick += OpenWindow_Timer_Tick;
             openWindowTimer.Start();
+
         }
 
         private void StaticConfigProvider_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
+                case "SecondsToOpen":
+                    SecondsToOpen = StaticConfigProvider.SecondsToOpen;
+                    openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen + (int)StaticConfigProvider.DelayMilliSeconds);
+                    break;
+                case "DelayMilliSeconds":
+                    DelayMilliSeconds = (int)StaticConfigProvider.DelayMilliSeconds * 1000;
+                    openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen + (int)StaticConfigProvider.DelayMilliSeconds);
+                    break;
                 case "TermFontType":
                     TermFontType = StaticConfigProvider.TermFontType;
                     break;
@@ -235,7 +250,7 @@ namespace E4Um.ViewModels
                     });
                     Task.Run(() =>
                     {
-                        Thread.Sleep(configProvider.DelayMilliSeconds);
+                        Thread.Sleep(DelayMilliSeconds);
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             Close();
@@ -253,7 +268,7 @@ namespace E4Um.ViewModels
                     });
                     Task.Run(() =>
                     {
-                        Thread.Sleep(configProvider.DelayMilliSeconds);
+                        Thread.Sleep(DelayMilliSeconds);
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             Close();

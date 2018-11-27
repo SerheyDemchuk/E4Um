@@ -96,6 +96,7 @@
     <Compile Include="AppSettings\ConfigProvider.cs" />
     <Compile Include="AppSettings\StaticConfigProvider.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushValueConverter.cs" />
+    <Compile Include="Converters\ModeToBooleanToggleSwitchButtonValueConverter.cs" />
     <Compile Include="Converters\SizeToContentToBooleanSliderValueConverter.cs" />
     <Compile Include="Converters\SizeToContentToBooleanToggleSwitchButtonValueConverter.cs" />
     <Compile Include="Converters\SystemDrawingToSystemWindowsFontStyleValueConverter.cs" />

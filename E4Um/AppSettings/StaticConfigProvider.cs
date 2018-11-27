@@ -12,6 +12,20 @@ namespace E4Um.AppSettings
 {
     public class StaticConfigProvider
     {
+        #region ModeField
+        static string popUpMode;
+        #endregion
+
+        #region PopUpWidthToContentField
+        static string popUpWidthToContent;
+        #endregion
+
+        #region IntervalsFields
+        static int secondsToOpen;
+        static double delayMilliSeconds;
+        #endregion
+
+        #region FontStyleFields
         static FontFamily termFontType;
         static FontFamily translationFontType;
         static double termFontSize;
@@ -20,7 +34,57 @@ namespace E4Um.AppSettings
         static System.Drawing.FontStyle translationFontStyle;
         static bool isTermUpper;
         static bool isTranslationUpper;
+        #endregion
 
+        #region ModeProperty
+        public static string PopUpMode
+        {
+            get { return popUpMode; }
+            set
+            {
+                popUpMode = value;
+                NotifyPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region PopUpWidthToContentProperty
+        public static string PopUpWidthToContent
+        {
+            get
+            {
+                return popUpWidthToContent;
+            }
+            set
+            {
+                popUpWidthToContent = value;
+                NotifyPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region IntervalsProperties
+        public static int SecondsToOpen
+        {
+            get { return secondsToOpen; }
+            set
+            {
+                secondsToOpen = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public static double DelayMilliSeconds
+        {
+            get { return delayMilliSeconds; }
+            set
+            {
+                delayMilliSeconds = value;
+                NotifyPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region FontStyleProperties
         public static FontFamily TermFontType
         {
             get { return termFontType; }
@@ -100,9 +164,13 @@ namespace E4Um.AppSettings
                 NotifyPropertyChanged();
             }
         }
-
+        #endregion
+        
         static StaticConfigProvider()
         {
+            //PopUpMode = Properties.Settings.Default.popUpMode;
+            PopUpMode = "appear";
+            PopUpWidthToContent = Properties.Settings.Default.popUpWidthToContent;
             TermFontType = new FontFamily(Properties.Settings.Default.termFontType);
             TranslationFontType = new FontFamily(Properties.Settings.Default.translationFontType);
             TermFontSize = Properties.Settings.Default.termFontSize;
@@ -111,10 +179,14 @@ namespace E4Um.AppSettings
             TranslationFontStyle = Properties.Settings.Default.translationFontStyle;
             IsTermUpper = Properties.Settings.Default.isTermUpper;
             IsTranslationUpper = Properties.Settings.Default.isTranslationUpper;
+            SecondsToOpen = Properties.Settings.Default.secondsToOpen;
+            DelayMilliSeconds = Properties.Settings.Default.delayMilliSeconds;
         }
 
         public static void SaveSettings()
         {
+            Properties.Settings.Default.popUpMode = PopUpMode;
+            Properties.Settings.Default.popUpWidthToContent = PopUpWidthToContent;
             Properties.Settings.Default.termFontType = TermFontType.ToString();
             Properties.Settings.Default.translationFontType = TranslationFontType.ToString();
             Properties.Settings.Default.termFontSize = TermFontSize;
@@ -123,6 +195,8 @@ namespace E4Um.AppSettings
             Properties.Settings.Default.translationFontStyle = TranslationFontStyle;
             Properties.Settings.Default.isTermUpper = IsTermUpper;
             Properties.Settings.Default.isTranslationUpper = IsTranslationUpper;
+            Properties.Settings.Default.secondsToOpen = SecondsToOpen;
+            Properties.Settings.Default.delayMilliSeconds = DelayMilliSeconds;
 
             Properties.Settings.Default.Save();
         }

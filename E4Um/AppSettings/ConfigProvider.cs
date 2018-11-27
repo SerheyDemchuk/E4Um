@@ -18,11 +18,8 @@ namespace E4Um.AppSettings
         string PopUpMode { get; set; }
         double PopUpWidth { get; set; }
         double PopUpHeight { get; set; }
-        Color PopUpBackground { get; set; }
-        FontFamily PopUpFontType { get; set; }
         string PopUpWidthToContent { get; set; }
-        double SecondsToOpen { get; set; }
-        int DelayMilliSeconds { get; set; }
+        Color PopUpBackground { get; set; }
         void SaveSettings();
     }
     public class ConfigProvider : ApplicationSettingsBase, IConfigProvider
@@ -32,6 +29,7 @@ namespace E4Um.AppSettings
         {
             get { return defaultInstance; }
         }
+
         [UserScopedSetting()]
         [DefaultSettingValue("true")]
         public bool IsTestEnabled
@@ -48,8 +46,18 @@ namespace E4Um.AppSettings
             set
             {
                 this["PopUpMode"] = value;
+                PopUpWidthToContent = "Width";
                 if (value == "default")
+                {
                     PopUpWidthToContent = "Manual";
+                    this["PopUpMode"] = value;
+                }
+                else if (value == "popup")
+                {
+                    PopUpWidthToContent = "Width";
+                    this["PopUpMode"] = value;
+                }
+                else this["PopUpMode"] = value;
             }
         }
 
@@ -70,22 +78,6 @@ namespace E4Um.AppSettings
         }
 
         [UserScopedSetting()]
-        [DefaultSettingValue("#FFFFF2A3")]
-        public Color PopUpBackground
-        {
-            get { return (Color)this["PopUpBackground"]; }
-            set { this["PopUpBackground"] = value; }
-        }
-
-        [UserScopedSetting()]
-        [DefaultSettingValue("Segoe UI")]
-        public FontFamily PopUpFontType
-        {
-            get { return (FontFamily)this["PopUpFontType"]; }
-            set { this["PopUpFontType"] = value; }
-        }
-
-        [UserScopedSetting()]
         [DefaultSettingValue("Width")]
         public string PopUpWidthToContent
         {
@@ -94,19 +86,11 @@ namespace E4Um.AppSettings
         }
 
         [UserScopedSetting()]
-        [DefaultSettingValue("2")]
-        public double SecondsToOpen
+        [DefaultSettingValue("#FFFFF2A3")]
+        public Color PopUpBackground
         {
-            get { return (double)this["SecondsToOpen"]; }
-            set { this["SecondsToOpen"] = value; }
-        }
-
-        [UserScopedSetting()]
-        [DefaultSettingValue("1000")]
-        public int DelayMilliSeconds
-        {
-            get { return (int)this["DelayMilliSeconds"]; }
-            set { this["DelayMilliSeconds"] = value; }
+            get { return (Color)this["PopUpBackground"]; }
+            set { this["PopUpBackground"] = value; }
         }
 
         public void SaveSettings()
