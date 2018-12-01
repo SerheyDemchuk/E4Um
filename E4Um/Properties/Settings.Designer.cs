@@ -142,29 +142,5 @@ namespace E4Um.Properties {
                 this["delayMilliSeconds"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("popup")]
-        public string popUpMode {
-            get {
-                return ((string)(this["popUpMode"]));
-            }
-            set {
-                this["popUpMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Width")]
-        public string popUpWidthToContent {
-            get {
-                return ((string)(this["popUpWidthToContent"]));
-            }
-            set {
-                this["popUpWidthToContent"] = value;
-            }
-        }
     }
 }

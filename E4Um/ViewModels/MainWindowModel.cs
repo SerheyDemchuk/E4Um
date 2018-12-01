@@ -32,7 +32,6 @@ namespace E4Um.ViewModels
             this.configProvider = configProvider;
             this.openWindowService = openWindowService;
 
-            this.configProvider.PopUpMode = "appear";
             OpenPopUpWindowCommand = new RelayCommand(OpenPopUpWindowCommand_Execute);
             OpenTermFontDialogCommand = new RelayCommand(OpenTermFontDialogCommand_Execute);
             OpenTranslationFontDialogCommand = new RelayCommand(OpenTranslationFontDialogCommand_Execute);
@@ -40,7 +39,7 @@ namespace E4Um.ViewModels
 
         public void OpenPopUpWindowCommand_Execute(object parameter)
         {
-            openWindowService.CreatePopUpWindow(configProvider.PopUpMode, DelaySeconds, StaticConfigProvider.PopUpWidthToContent);
+            openWindowService.CreatePopUpWindow(configProvider.PopUpMode, DelaySeconds, configProvider.PopUpWidthToContent);
         }
         
         public void OpenTermFontDialogCommand_Execute(object parameter)

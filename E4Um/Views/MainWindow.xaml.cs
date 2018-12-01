@@ -82,13 +82,9 @@ namespace E4Um
             nIcon.Visible = false;
         }
 
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            nIcon.Visible = false;
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
+            nIcon.Visible = false;
             configProvider.SaveSettings();
             StaticConfigProvider.SaveSettings();
             base.OnClosing(e);

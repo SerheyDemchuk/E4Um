@@ -15,11 +15,60 @@ namespace E4Um.ViewModels
 {
     class PopUpWindowModel : ViewModelBase
     {
+        #region WordsDictionary and Term/Translation fields
         Dictionary<string, double> words;
         string windowContentTerm;
         string windowContentTranslation;
-        string popUpWidthToContent;
-        
+        #endregion
+
+        #region WordsDictionary and Term/Translation properties
+        public Dictionary<string, double> Words
+        {
+            get
+            {
+                words = new Dictionary<string, double>(PopUp.GetWords());
+                return words;
+            }
+        }
+
+        public string WindowContentTerm
+        {
+            get { return windowContentTerm; }
+            set
+            {
+                windowContentTerm = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string WindowContentTranslation
+        {
+            get { return windowContentTranslation; }
+            set
+            {
+                windowContentTranslation = value;
+                NotifyPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region Term/Translation Lists
+        public List<string> TermTranslation { get; set; }
+        public List<string> Term { get; set; }
+        public List<string> Translation { get; set; }
+        #endregion
+
+        #region Service/Config readonly fields
+        readonly IWindowService windowService;
+        readonly IConfigProvider configProvider;
+        #endregion
+
+        #region TimerProperties
+        DispatcherTimer openWindowTimer;
+        int SecondsToOpen { get; set; }
+        int DelayMilliSeconds { get; set; }
+        #endregion
+
         #region FontSettingProperties
         FontFamily termFontType;
         FontFamily translationFontType;
@@ -100,48 +149,10 @@ namespace E4Um.ViewModels
             }
         }
         #endregion
-        public Dictionary<string, double> Words
-        {
-            get
-            {
-                words = new Dictionary<string, double>(PopUp.GetWords());
-                return words;
-            }
-        }
 
-        public string WindowContentTerm
-        {
-            get { return windowContentTerm; }
-            set
-            {
-                windowContentTerm = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public string WindowContentTranslation
-        {
-            get { return windowContentTranslation; }
-            set
-            {
-                windowContentTranslation = value;
-                NotifyPropertyChanged();
-            }
-        }
-        
-        public List<string> TermTranslation { get; set; }
-        public List<string> Term { get; set; }
-        public List<string> Translation { get; set; }
-
-        public int CurrentRecord { get; set; }
-
-        private readonly IWindowService windowService;
-        private readonly IConfigProvider configProvider;
-
-        int SecondsToOpen { get; set; }
-        int DelayMilliSeconds { get; set; }
-
-        DispatcherTimer openWindowTimer;
+        string PopUpMode { get; set; }
+        int CurrentRecord { get; set; }
+        bool DefaultModeOffset { get; set; }
 
         public PopUpWindowModel(IWindowService windowService, IConfigProvider configProvider)
         {
@@ -152,6 +163,7 @@ namespace E4Um.ViewModels
             //this.sessionContext.WindowFont = new FontFamily("Impact");
             //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
             //FontType = new FontFamily("Impact");
+
             TermTranslation = new List<string>();
             Term = new List<string>();
             Translation = new List<string>();
@@ -164,24 +176,43 @@ namespace E4Um.ViewModels
             this.windowService = windowService;
             this.configProvider = configProvider;
 
+            PopUpMode = this.configProvider.PopUpMode;
             CurrentRecord = 0;
+            DefaultModeOffset = false;
+            StringSlicer(StaticConfigProvider.IsTermUpper, StaticConfigProvider.IsTranslationUpper);
+            ChangeWindowContent();
+
             TermFontType = StaticConfigProvider.TermFontType;
             TranslationFontType = StaticConfigProvider.TranslationFontType;
             TermFontSize = StaticConfigProvider.TermFontSize;
             TranslationFontSize = StaticConfigProvider.TranslationFontSize;
             TermFontStyle = StaticConfigProvider.TermFontStyle;
             TranslationFontStyle = StaticConfigProvider.TranslationFontStyle;
-            StaticConfigProvider.PropertyChanged += StaticConfigProvider_PropertyChanged;
 
-            StringSlicer(StaticConfigProvider.IsTermUpper, StaticConfigProvider.IsTranslationUpper);
-            ChangeWindowContent();
+            StaticConfigProvider.StaticPropertyChanged += StaticConfigProvider_PropertyChanged;
+            ConfigProvider.StaticPropertyChanged += ConfigProvider_PropertyChanged;
 
             SecondsToOpen = StaticConfigProvider.SecondsToOpen + (int)StaticConfigProvider.DelayMilliSeconds;
             DelayMilliSeconds = (int)StaticConfigProvider.DelayMilliSeconds * 1000;
             openWindowTimer = new DispatcherTimer();
-            openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen);
+
+            if (PopUpMode != "default")
+                openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen);
+            else
+                openWindowTimer.Interval = TimeSpan.FromSeconds(DelayMilliSeconds / 1000);
+
             openWindowTimer.Tick += OpenWindow_Timer_Tick;
             openWindowTimer.Start();
+
+        }
+
+        private void ConfigProvider_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PopUpMode = ConfigProvider.StaticPopUpMode;
+            if(PopUpMode != "default")
+                openWindowTimer.Interval = TimeSpan.FromSeconds(StaticConfigProvider.SecondsToOpen + (int)StaticConfigProvider.DelayMilliSeconds);
+            else
+                openWindowTimer.Interval = TimeSpan.FromSeconds(DelayMilliSeconds / 1000);
 
         }
 
@@ -194,8 +225,16 @@ namespace E4Um.ViewModels
                     openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen + (int)StaticConfigProvider.DelayMilliSeconds);
                     break;
                 case "DelayMilliSeconds":
-                    DelayMilliSeconds = (int)StaticConfigProvider.DelayMilliSeconds * 1000;
-                    openWindowTimer.Interval = TimeSpan.FromSeconds(SecondsToOpen + (int)StaticConfigProvider.DelayMilliSeconds);
+                    if (PopUpMode != "default")
+                    {
+                        DelayMilliSeconds = (int)StaticConfigProvider.DelayMilliSeconds * 1000;
+                        openWindowTimer.Interval = TimeSpan.FromSeconds(StaticConfigProvider.SecondsToOpen + (int)StaticConfigProvider.DelayMilliSeconds);
+                    }
+                    else
+                    {
+                        DelayMilliSeconds = (int)StaticConfigProvider.DelayMilliSeconds * 1000;
+                        openWindowTimer.Interval = TimeSpan.FromSeconds(StaticConfigProvider.DelayMilliSeconds);
+                    }
                     break;
                 case "TermFontType":
                     TermFontType = StaticConfigProvider.TermFontType;
@@ -233,10 +272,17 @@ namespace E4Um.ViewModels
         private void OpenWindow_Timer_Tick(object sender, EventArgs e)
         {
             //FontType = FontsList[CurrentRecord];
-            switch (configProvider.PopUpMode)
+            switch (PopUpMode)
             {
                 case ("default"):
-                    ChangeWindowContent();
+                    if (DefaultModeOffset)
+                    {
+                        Open();
+                        ChangeWindowContent();
+                        DefaultModeOffset = false;
+                    }
+                    else
+                        ChangeWindowContent();
                     break;
 
                 case ("appear"):
@@ -256,6 +302,7 @@ namespace E4Um.ViewModels
                             Close();
                         });
                     });
+                    DefaultModeOffset = true;
                     break;
 
                 case ("popup"):
@@ -275,18 +322,19 @@ namespace E4Um.ViewModels
                             ChangeWindowContent();
                         });
                     });
+                    DefaultModeOffset = true;
                     break;
             }
         }
 
         public void Open()
         {
-            windowService.ShowPopUpWindow(configProvider.PopUpMode);
+            windowService.ShowPopUpWindow(PopUpMode);
         }
 
         public void Close()
         {
-            windowService.HidePopUpWindow(configProvider.PopUpMode);   
+            windowService.HidePopUpWindow(PopUpMode);   
         }
 
         public void StringSlicer(bool isTermUpper, bool isTranslationUpper)

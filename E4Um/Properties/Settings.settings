@@ -32,11 +32,5 @@
     <Setting Name="delayMilliSeconds" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="popUpMode" Type="System.String" Scope="User">
-      <Value Profile="(Default)">popup</Value>
-    </Setting>
-    <Setting Name="popUpWidthToContent" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Width</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

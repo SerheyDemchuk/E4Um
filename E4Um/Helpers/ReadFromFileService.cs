@@ -15,7 +15,7 @@ namespace E4Um.Helpers
         {
             if (words.Count == 0)
             {
-                StreamReader reader = new StreamReader("English\\Аэропорт. The Airport" + ".txt", Encoding.Default);
+                StreamReader reader = new StreamReader("English\\Словарь 8000" + ".txt", Encoding.Default);
                 string curLine;
                 while ((curLine = reader.ReadLine()) != null)
                 {

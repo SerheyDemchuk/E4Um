@@ -1,25 +1,12 @@
 ﻿using System;
-using System.Configuration;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace E4Um.AppSettings
 {
     public class StaticConfigProvider
     {
-        #region ModeField
-        static string popUpMode;
-        #endregion
-
-        #region PopUpWidthToContentField
-        static string popUpWidthToContent;
-        #endregion
-
         #region IntervalsFields
         static int secondsToOpen;
         static double delayMilliSeconds;
@@ -36,33 +23,6 @@ namespace E4Um.AppSettings
         static bool isTranslationUpper;
         #endregion
 
-        #region ModeProperty
-        public static string PopUpMode
-        {
-            get { return popUpMode; }
-            set
-            {
-                popUpMode = value;
-                NotifyPropertyChanged();
-            }
-        }
-        #endregion
-
-        #region PopUpWidthToContentProperty
-        public static string PopUpWidthToContent
-        {
-            get
-            {
-                return popUpWidthToContent;
-            }
-            set
-            {
-                popUpWidthToContent = value;
-                NotifyPropertyChanged();
-            }
-        }
-        #endregion
-
         #region IntervalsProperties
         public static int SecondsToOpen
         {
@@ -70,7 +30,7 @@ namespace E4Um.AppSettings
             set
             {
                 secondsToOpen = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
         public static double DelayMilliSeconds
@@ -79,7 +39,7 @@ namespace E4Um.AppSettings
             set
             {
                 delayMilliSeconds = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
         #endregion
@@ -91,7 +51,7 @@ namespace E4Um.AppSettings
             set
             {
                 termFontType = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
 
@@ -101,7 +61,7 @@ namespace E4Um.AppSettings
             set
             {
                 translationFontType = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
 
@@ -111,7 +71,7 @@ namespace E4Um.AppSettings
             set
             {
                 termFontSize = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
 
@@ -121,7 +81,7 @@ namespace E4Um.AppSettings
             set
             {
                 translationFontSize = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
 
@@ -131,7 +91,7 @@ namespace E4Um.AppSettings
             set
             {
                 termFontStyle = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
 
@@ -141,7 +101,7 @@ namespace E4Um.AppSettings
             set
             {
                 translationFontStyle = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
 
@@ -151,7 +111,7 @@ namespace E4Um.AppSettings
             set
             {
                 isTermUpper = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
 
@@ -161,16 +121,13 @@ namespace E4Um.AppSettings
             set
             {
                 isTranslationUpper = value;
-                NotifyPropertyChanged();
+                StaticNotifyPropertyChanged();
             }
         }
         #endregion
         
         static StaticConfigProvider()
         {
-            //PopUpMode = Properties.Settings.Default.popUpMode;
-            PopUpMode = "appear";
-            PopUpWidthToContent = Properties.Settings.Default.popUpWidthToContent;
             TermFontType = new FontFamily(Properties.Settings.Default.termFontType);
             TranslationFontType = new FontFamily(Properties.Settings.Default.translationFontType);
             TermFontSize = Properties.Settings.Default.termFontSize;
@@ -185,8 +142,6 @@ namespace E4Um.AppSettings
 
         public static void SaveSettings()
         {
-            Properties.Settings.Default.popUpMode = PopUpMode;
-            Properties.Settings.Default.popUpWidthToContent = PopUpWidthToContent;
             Properties.Settings.Default.termFontType = TermFontType.ToString();
             Properties.Settings.Default.translationFontType = TranslationFontType.ToString();
             Properties.Settings.Default.termFontSize = TermFontSize;
@@ -201,16 +156,16 @@ namespace E4Um.AppSettings
             Properties.Settings.Default.Save();
         }
 
-        public static event PropertyChangedEventHandler PropertyChanged;
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
 
         // This method is called by the Set accessor of each property.
         // The CallerMemberName attribute that is applied to the optional propertyName
         // parameter causes the property name of the caller to be substituted as an argument.
-        private static void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        private static void StaticNotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
+            if (StaticPropertyChanged != null)
             {
-                PropertyChanged(null, new PropertyChangedEventArgs(propertyName));
+                StaticPropertyChanged(null, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

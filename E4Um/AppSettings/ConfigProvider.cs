@@ -3,12 +3,6 @@ using System.Configuration;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using E4Um.ViewModels;
 
 namespace E4Um.AppSettings
 {
@@ -22,9 +16,11 @@ namespace E4Um.AppSettings
         Color PopUpBackground { get; set; }
         void SaveSettings();
     }
-    public class ConfigProvider : ApplicationSettingsBase, IConfigProvider
+    public class ConfigProvider : ApplicationSettingsBase, IConfigProvider, INotifyPropertyChanged
     {
-        private static ConfigProvider defaultInstance = ((ConfigProvider)(Synchronized(new ConfigProvider())));
+        #region Configuration Properties and Save Method
+
+        static ConfigProvider defaultInstance = ((ConfigProvider)(Synchronized(new ConfigProvider())));
         public static ConfigProvider Default
         {
             get { return defaultInstance; }
@@ -45,19 +41,25 @@ namespace E4Um.AppSettings
             get { return (string)this["PopUpMode"]; }
             set
             {
-                this["PopUpMode"] = value;
-                PopUpWidthToContent = "Width";
-                if (value == "default")
+                if(value == "appear")
                 {
-                    PopUpWidthToContent = "Manual";
+                    PopUpWidthToContent = "Width";
                     this["PopUpMode"] = value;
+                    StaticPopUpMode = (string)this["PopUpMode"];
                 }
                 else if (value == "popup")
                 {
                     PopUpWidthToContent = "Width";
                     this["PopUpMode"] = value;
+                    StaticPopUpMode = (string)this["PopUpMode"];
                 }
-                else this["PopUpMode"] = value;
+                else if (value == "default")
+                {
+                    PopUpWidthToContent = "Manual";
+                    this["PopUpMode"] = value;
+                    StaticPopUpMode = (string)this["PopUpMode"];
+                }
+
             }
         }
 
@@ -66,7 +68,11 @@ namespace E4Um.AppSettings
         public double PopUpWidth
         {
             get { return (double)this["PopUpWidth"]; }
-            set { this["PopUpWidth"] = value; }
+            set
+            {
+                if(value != 400)
+                this["PopUpWidth"] = value;
+            }
         }
 
         [UserScopedSetting()]
@@ -98,5 +104,30 @@ namespace E4Um.AppSettings
             Default.Save();
         }
 
+        #endregion
+
+        #region Static Configuration Properties and Static NPC
+
+        static string staticPopUpMode;
+        public static string StaticPopUpMode
+        {
+            get { return staticPopUpMode; }
+            set
+            {
+                staticPopUpMode = value;
+                StaticNotifyPropertyChanged();
+            }
+        }
+
+        public static event PropertyChangedEventHandler StaticPropertyChanged;
+        public static void StaticNotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (StaticPropertyChanged != null)
+            {
+                StaticPropertyChanged(null, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
     }
 }

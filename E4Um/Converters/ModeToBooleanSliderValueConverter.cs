@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 namespace E4Um.Converters
 {
-    class ModeToBooleanToggleSwitchButtonValueConverter: IValueConverter
+    class ModeToBooleanSliderValueConverter: IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
@@ -15,9 +15,9 @@ namespace E4Um.Converters
             if (value is string)
             {
                 string mode = (string)value;
-                if (mode == "appear")
-                    return true;
-                else return false;
+                if (mode == "default")
+                    return false;
+                else return true;
             }
 
             Type type = value.GetType();

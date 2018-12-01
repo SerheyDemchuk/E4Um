@@ -7,6 +7,10 @@
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>
+            <BitmapImage x:Key="PopUpModeImage" UriSource="Resources/PopUpMode.png" />
+            <BitmapImage x:Key="AppearModeImage" UriSource="Resources/AppearMode.png" />
+            <BitmapImage x:Key="DefaultModeImage" UriSource="Resources/DefaultMode.png" />
+            <p:ConfigProvider x:Key="configProvider" />
             <p:StaticConfigProvider x:Key="staticConfigProvider" />
             <con:ColorToSolidColorBrushValueConverter x:Key="ColorToSolidColorBrush_ValueConverter"/>
             <ResourceDictionary.MergedDictionaries>

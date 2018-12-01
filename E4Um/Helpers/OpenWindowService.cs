@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
+using System.Reflection;
 using E4Um.Views;
 using E4Um.ViewModels;
 using E4Um.Helpers;
@@ -24,6 +25,7 @@ namespace E4Um.Helpers
     }
     class OpenWindowService : IWindowService
     {
+        SizeChangedEventHandler handler;
         //public OpenWindowService(MainWindow mainWindow)
         //{
         //    _mainWidnow = mainWindow;
@@ -92,6 +94,7 @@ namespace E4Um.Helpers
         {
             Point pt = SystemParameters.WorkArea.TopLeft;
             Window popUpWindow = null;
+            DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
 
             foreach (Window window in Application.Current.Windows)
             {
@@ -106,11 +109,11 @@ namespace E4Um.Helpers
                 case "appear":
                     if (popUpWindow.SizeToContent.ToString() == "Width")
                     {
-                        DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
                         popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
 
-                        popUpWindow.SizeChanged += (object sender, SizeChangedEventArgs e) =>
+                        handler += (object sender, SizeChangedEventArgs e) =>
                         {
+                            popUpWindow.SizeChanged -= handler;
                             pt.X = 0;
                             pt.Y = 0;
                             pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
@@ -118,15 +121,16 @@ namespace E4Um.Helpers
                             popUpWindow.Left = pt.X - 5;
                             popUpWindow.Top = pt.Y - 5;
                         };
+                        popUpWindow.SizeChanged += handler;
                     }
                     else if(popUpWindow.SizeToContent.ToString() == "Manual")
                     {
-                        DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
                         popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
                     }
 
                     break;
                 case "popup":
+                    popUpWindow.Opacity = 1;
                     pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
                     pt.Offset(-popUpWindow.ActualWidth, 45);
                     popUpWindow.Left = pt.X - 5;
@@ -140,6 +144,15 @@ namespace E4Um.Helpers
                         }));
                     }
 
+                    break;
+                case "default":
+                    popUpWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+                    pt.X = 0;
+                    pt.Y = 0;
+                    pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+                    pt.Offset(-popUpWindow.ActualWidth, -popUpWindow.ActualHeight);
+                    popUpWindow.Left = pt.X - 5;
+                    popUpWindow.Top = pt.Y - 5;
                     break;
             }
 
@@ -156,18 +169,17 @@ namespace E4Um.Helpers
                     popUpWindow = window;
                 }
             }
-
-            DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
-            popUpWindow.BeginAnimation(UIElement.OpacityProperty, animation);
-
-            if (mode == "popup")
+            if(mode == "appear")
+            {
+                DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.8));
+                popUpWindow.BeginAnimation(UIElement.OpacityProperty, animation);
+            } 
+            else if(mode == "popup")
             {
                 popUpWindow.Top += popUpWindow.Height + 45;
                 popUpWindow.BeginAnimation(UIElement.OpacityProperty, null);
             }
-
         }
-
 
         //public void CreateMainWindow()
         //{
