@@ -14,21 +14,22 @@ namespace E4Um.ViewModels
 {
     class MainWindowModel : ViewModelBase
     {
-        int DelaySeconds { get; set; }
+        public string CurrentCategory { get; set; }
+
+        private readonly IConfigProvider configProvider;
+        private readonly IWindowService openWindowService;
 
         public RelayCommand OpenPopUpWindowCommand { get; set; }
         public RelayCommand OpenTermFontDialogCommand { get; set; }
         public RelayCommand OpenTranslationFontDialogCommand { get; set; }
 
-        private readonly IConfigProvider configProvider;
-        private readonly IWindowService openWindowService;
         //private readonly ISessionContext sessionCon;
 
         public MainWindowModel(IConfigProvider configProvider, IWindowService openWindowService)
         {
             //this.sessionCon = sessionCon;
             //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
-            DelaySeconds = (int)StaticConfigProvider.DelayMilliSeconds * 1000;
+                
             this.configProvider = configProvider;
             this.openWindowService = openWindowService;
 
@@ -39,7 +40,7 @@ namespace E4Um.ViewModels
 
         public void OpenPopUpWindowCommand_Execute(object parameter)
         {
-            openWindowService.CreatePopUpWindow(configProvider.PopUpMode, DelaySeconds, configProvider.PopUpWidthToContent);
+            openWindowService.CreatePopUpWindow(configProvider.PopUpMode, (int)StaticConfigProvider.DelayMilliSeconds * 1000, configProvider.PopUpWidthToContent);
         }
         
         public void OpenTermFontDialogCommand_Execute(object parameter)

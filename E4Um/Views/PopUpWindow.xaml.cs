@@ -1,9 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
-using System.Threading;
-using System.Windows.Media.Animation;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace E4Um.Views
 {
@@ -71,7 +67,7 @@ namespace E4Um.Views
         //    });
         //}
 
-        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
             DragMove();

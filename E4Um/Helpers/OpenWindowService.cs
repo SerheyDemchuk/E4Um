@@ -33,7 +33,7 @@ namespace E4Um.Helpers
         public void CreatePopUpWindow(string mode, int delayMilliSeconds, string popUpSizeToContent)
         {
             Point pt = SystemParameters.WorkArea.TopLeft;
-            PopUpWindow popUpWindow = new PopUpWindow(mode) { DataContext = new PopUpWindowModel(new OpenWindowService(), new ConfigProvider())};
+            PopUpWindow popUpWindow = new PopUpWindow(mode) { DataContext = new PopUpWindowModel(new Models.PopUp(), new OpenWindowService(), new ConfigProvider())};
 
             switch (mode)
             {

@@ -2,11 +2,9 @@
 using System.Windows.Threading;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using System.ComponentModel;
-using System.Linq;
 using E4Um.Models;
 using E4Um.Helpers;
 using E4Um.AppSettings;
@@ -15,21 +13,13 @@ namespace E4Um.ViewModels
 {
     class PopUpWindowModel : ViewModelBase
     {
-        #region WordsDictionary and Term/Translation fields
-        Dictionary<string, double> words;
+
+        #region Term/Translation fields
         string windowContentTerm;
         string windowContentTranslation;
         #endregion
 
-        #region WordsDictionary and Term/Translation properties
-        public Dictionary<string, double> Words
-        {
-            get
-            {
-                words = new Dictionary<string, double>(PopUp.GetWords());
-                return words;
-            }
-        }
+        #region Term/Translation properties
 
         public string WindowContentTerm
         {
@@ -50,12 +40,6 @@ namespace E4Um.ViewModels
                 NotifyPropertyChanged();
             }
         }
-        #endregion
-
-        #region Term/Translation Lists
-        public List<string> TermTranslation { get; set; }
-        public List<string> Term { get; set; }
-        public List<string> Translation { get; set; }
         #endregion
 
         #region Service/Config readonly fields
@@ -150,11 +134,12 @@ namespace E4Um.ViewModels
         }
         #endregion
 
+        public PopUp Model { get; }
         string PopUpMode { get; set; }
         int CurrentRecord { get; set; }
         bool DefaultModeOffset { get; set; }
 
-        public PopUpWindowModel(IWindowService windowService, IConfigProvider configProvider)
+        public PopUpWindowModel(PopUp model, IWindowService windowService, IConfigProvider configProvider)
         {
             //this.sessionContext = sessionContext;
             //SessionContext sContext = new SessionContext();
@@ -163,15 +148,7 @@ namespace E4Um.ViewModels
             //this.sessionContext.WindowFont = new FontFamily("Impact");
             //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
             //FontType = new FontFamily("Impact");
-
-            TermTranslation = new List<string>();
-            Term = new List<string>();
-            Translation = new List<string>();
-
-            foreach (KeyValuePair<string, double> kvp in Words)
-            {
-                TermTranslation.Add(kvp.Key);
-            }
+            Model = model;
 
             this.windowService = windowService;
             this.configProvider = configProvider;
@@ -179,7 +156,7 @@ namespace E4Um.ViewModels
             PopUpMode = this.configProvider.PopUpMode;
             CurrentRecord = 0;
             DefaultModeOffset = false;
-            StringSlicer(StaticConfigProvider.IsTermUpper, StaticConfigProvider.IsTranslationUpper);
+
             ChangeWindowContent();
 
             TermFontType = StaticConfigProvider.TermFontType;
@@ -254,18 +231,6 @@ namespace E4Um.ViewModels
                 case "TranslationFontStyle":
                     TranslationFontStyle = StaticConfigProvider.TranslationFontStyle;
                     break;
-                case "IsTermUpper":
-                    if (StaticConfigProvider.IsTermUpper == true)
-                        Term = Term.Select(x => x.ToUpper()).ToList();
-                    else
-                        Term = Term.Select(x => x.ToLower()).ToList();
-                    break;
-                case "IsTranslationUpper":
-                    if (StaticConfigProvider.IsTranslationUpper == true)
-                        Translation = Translation.Select(x => x.ToUpper()).ToList();
-                    else
-                        Translation = Translation.Select(x => x.ToLower()).ToList();
-                    break;
             }
         }
 
@@ -337,77 +302,20 @@ namespace E4Um.ViewModels
             windowService.HidePopUpWindow(PopUpMode);   
         }
 
-        public void StringSlicer(bool isTermUpper, bool isTranslationUpper)
-        {
-            foreach(string str in TermTranslation)
-            {
-                int index = str.IndexOf(" - ");
-                if(index != -1)
-                {
-                    int translationLength = str.Length - 2 - index;
-                    if (isTermUpper)
-                    {
-                        string temp = str.Substring(0, index + 2);
-                        Term.Add(temp.ToUpper());
-                    }
-                    else
-                    {
-                        string temp = str.Substring(0, index + 2);
-                        Term.Add(temp.ToLower());
-                    }
-                    if (isTranslationUpper)
-                    {
-                        string temp = str.Substring(index + 2, translationLength);
-                        Translation.Add(temp.ToUpper());
-                    }
-                    else
-                    {
-                        string temp = str.Substring(index + 2, translationLength);
-                        Translation.Add(temp.ToLower());
-                    }
-                }
-                else
-                {
-                    int secondIndex = str.IndexOf("-");
-                    int translationLength = str.Length - 1 - secondIndex;
-                    if (isTermUpper)
-                    {
-                        string temp = str.Substring(0, secondIndex + 1);
-                        Term.Add(temp.ToUpper());
-                    }
-                    else
-                    {
-                        string temp = str.Substring(0, secondIndex + 1);
-                        Term.Add(temp.ToLower());
-                    }
-                    if (isTranslationUpper)
-                    {
-                        string temp = str.Substring(secondIndex + 1, translationLength);
-                        Translation.Add(temp.ToUpper());
-                    }
-                    else
-                    {
-                        string temp = str.Substring(secondIndex + 1, translationLength);
-                        Translation.Add(temp.ToLower());
-                    }
-                } 
-            }
-        }
-
         public void ChangeWindowContent()
         {
             
-           if (CurrentRecord != TermTranslation.Count)
+           if (CurrentRecord != Model.TermList.Count)
            {
-                WindowContentTerm = Term[CurrentRecord];
-                WindowContentTranslation = Translation[CurrentRecord];
+                WindowContentTerm = Model.TermList[CurrentRecord];
+                WindowContentTranslation = Model.TranslationList[CurrentRecord];
                 CurrentRecord++;
            }
            else
             {
                 CurrentRecord = 0;
-                WindowContentTerm = Term[CurrentRecord];
-                WindowContentTranslation = Translation[CurrentRecord];
+                WindowContentTerm = Model.TermList[CurrentRecord];
+                WindowContentTranslation = Model.TranslationList[CurrentRecord];
                 CurrentRecord++;
             }
 
