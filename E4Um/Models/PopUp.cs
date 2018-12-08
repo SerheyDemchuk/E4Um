@@ -18,6 +18,8 @@ namespace E4Um.Models
         Dictionary<string, double> wordsDictionary;
         List<string> termList;
         List<string> translationList;
+        List<string> termTranslationList;
+
 
         public Dictionary<string, double> WordsDictionary
         {
@@ -57,11 +59,21 @@ namespace E4Um.Models
             }
         }
 
+        public List<string> TermTranslationList
+        {
+            get { return termTranslationList; }
+            set
+            {
+                if (termTranslationList != value)
+                {
+                    termTranslationList = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
         public PopUp()
         {
-            GetWordsDictionary();
-            GetTermList();
-            GetTranslationList();
+            GetTermTranslationList(StaticConfigProvider.CurrentCategoryPath);
             StaticConfigProvider.StaticPropertyChanged += StaticConfigProvider_PropertyChanged;
         }
         private void StaticConfigProvider_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -88,6 +100,23 @@ namespace E4Um.Models
             WordsDictionary = ReadFromFileService.ReturnWordsDictionary();
             return WordsDictionary;
         }
+
+        public void GetTermTranslationList(string path, [CallerMemberName]string caller = "")
+        {
+            string callerMethodName = caller;
+            TermTranslationList = ReadFromFileService.ReturnTermTranslationList(path, callerMethodName);
+            GetTermList();
+            GetTranslationList();
+            NotifyPropertyChanged();
+        }
+
+        public void GetDataGridTermTranslationList(string path, [CallerMemberName]string caller = "")
+        {
+            string callerMethodName = caller;
+            TermTranslationList = ReadFromFileService.ReturnTermTranslationList(path, callerMethodName);
+            NotifyPropertyChanged();
+        }
+
         public List<string> GetTermList()
         {
             TermList = ReadFromFileService.ReturnTermList();
@@ -98,7 +127,6 @@ namespace E4Um.Models
             TranslationList = ReadFromFileService.ReturnTranslationList();
             return TranslationList;
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

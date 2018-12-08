@@ -8,7 +8,8 @@ namespace E4Um.AppSettings
 {
     public interface IConfigProvider
     {
-        bool IsTestEnabled { get; set; }
+        bool IsTestOn { get; set; }
+        string CurrentCategory { get; set; }
         string PopUpMode { get; set; }
         double PopUpWidth { get; set; }
         double PopUpHeight { get; set; }
@@ -27,11 +28,19 @@ namespace E4Um.AppSettings
         }
 
         [UserScopedSetting()]
-        [DefaultSettingValue("true")]
-        public bool IsTestEnabled
+        [DefaultSettingValue("false")]
+        public bool IsTestOn
         {
-            get { return (bool)this["IsTestEnabled"]; }
-            set { this["IsTestEnabled"] = value; }
+            get { return (bool)this["IsTestOn"]; }
+            set { this["IsTestOn"] = value; }
+        }
+
+        [UserScopedSetting()]
+        [DefaultSettingValue("Семья. Family")]
+        public string CurrentCategory
+        {
+            get { return (string)this["CurrentCategory"]; }
+            set { this["CurrentCategory"] = value; }
         }
 
         [UserScopedSetting()]

@@ -56,6 +56,8 @@ namespace E4Um
             nIcon.ContextMenuStrip = cMenuStrip;
             // /Initialising context menu strip
 
+            
+            
             //Binding
             //Source={x:Static p:ConfigProvider.Default}, Path=PopUpFontType, Mode=TwoWay}
             //System.Windows.Data.Binding myBinding = new System.Windows.Data.Binding();

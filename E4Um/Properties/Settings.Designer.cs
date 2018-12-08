@@ -142,5 +142,17 @@ namespace E4Um.Properties {
                 this["delayMilliSeconds"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("English\\\\Погода. Weather.txt")]
+        public string currentCategoryPath {
+            get {
+                return ((string)(this["currentCategoryPath"]));
+            }
+            set {
+                this["currentCategoryPath"] = value;
+            }
+        }
     }
 }

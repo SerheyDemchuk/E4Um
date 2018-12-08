@@ -10,7 +10,7 @@ namespace E4Um
     /// </summary>
     public partial class App : Application
     {
-        MainWindowModel mainVM = new MainWindowModel(new ConfigProvider(), new OpenWindowService());
+        MainWindowModel mainVM = new MainWindowModel(new Models.PopUp(), new ConfigProvider(), new OpenWindowService());
 
         protected override void OnStartup(StartupEventArgs e)
         {

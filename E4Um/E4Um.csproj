@@ -95,6 +95,7 @@
     </ApplicationDefinition>
     <Compile Include="AppSettings\ConfigProvider.cs" />
     <Compile Include="AppSettings\StaticConfigProvider.cs" />
+    <Compile Include="Behaviours\BindableSelectedItemBehavior.cs" />
     <Compile Include="Converters\AppearModeToBooleanValueConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushValueConverter.cs" />
     <Compile Include="Converters\DefaultModeToBooleanValueConverter.cs" />
@@ -105,10 +106,12 @@
     <Compile Include="Converters\SizeToContentToBooleanToggleSwitchButtonValueConverter.cs" />
     <Compile Include="Converters\SystemDrawingToSystemWindowsFontStyleValueConverter.cs" />
     <Compile Include="Converters\SystemDrawingToSystemWindowsFontWeightValueConverter.cs" />
+    <Compile Include="Helpers\DataGridItem.cs" />
     <Compile Include="Helpers\OpenWindowService.cs" />
     <Compile Include="Helpers\DialogCloser.cs" />
     <Compile Include="Helpers\ReadFromFileService.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
+    <Compile Include="Helpers\TreeViewItems.cs" />
     <Compile Include="ViewModels\MainWindowModel.cs" />
     <Compile Include="ViewModels\PopUpWindowModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

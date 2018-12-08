@@ -4,8 +4,11 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Media;
+using System.IO;
+using System.Collections.Generic;
 using System.ComponentModel;
-//using System.Drawing;
+using System.Collections.ObjectModel;
+using E4Um.Models;
 using E4Um.Views;
 using E4Um.AppSettings;
 using E4Um.Helpers;
@@ -14,7 +17,49 @@ namespace E4Um.ViewModels
 {
     class MainWindowModel : ViewModelBase
     {
-        public string CurrentCategory { get; set; }
+        string currentCategory;
+        public string CurrentCategory
+        {
+            get
+            {
+                return currentCategory;
+            }
+            set
+            {
+                if(currentCategory != value)
+                {
+                    currentCategory = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        public List<TreeViewItems> TreeViewItemsList { get; set; }
+
+        FileItem selectedItem;
+        public FileItem SelectedItem
+        {
+            get
+            {
+                return selectedItem;
+            }
+            set
+            {
+                if (selectedItem != value)
+                {
+                    selectedItem = value;
+                    Model.GetDataGridTermTranslationList("English\\" + selectedItem.Name);
+                }
+            }
+        }
+
+        public PopUp Model { get; }
+
+        public ObservableCollection<DataGridItem> DataGridItemList { get; set; }
+        public Dictionary<string, double> DataGridWordsDictionary { get; set; }
+
+        List<string> DataGridTermTranslationList { get; set; }
+        public List<string> DataGridTermList { get; set; }
+        public List<string> DataGridTranslationList { get; set; }
 
         private readonly IConfigProvider configProvider;
         private readonly IWindowService openWindowService;
@@ -22,20 +67,79 @@ namespace E4Um.ViewModels
         public RelayCommand OpenPopUpWindowCommand { get; set; }
         public RelayCommand OpenTermFontDialogCommand { get; set; }
         public RelayCommand OpenTranslationFontDialogCommand { get; set; }
+        public RelayCommand SelectedItemChangedCommand { get; set; }
 
-        //private readonly ISessionContext sessionCon;
-
-        public MainWindowModel(IConfigProvider configProvider, IWindowService openWindowService)
+        public MainWindowModel(PopUp model, IConfigProvider configProvider, IWindowService openWindowService)
         {
-            //this.sessionCon = sessionCon;
-            //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
-                
+               
+            Model = model;
+            Model.PropertyChanged += Model_PropertyChanged;
+            CurrentCategory = StaticConfigProvider.CurrentCategoryPath.Remove(0, 8);
+            DataGridItemList = new ObservableCollection<DataGridItem>();
+            DataGridWordsDictionary = new Dictionary<string, double>();
+
+            DataGridTermTranslationList = Model.TermTranslationList;
+            DataGridTermList = new List<string>();
+            DataGridTranslationList = new List<string>();
+            StringSlicer();
+
+            for (int i = 0; i < DataGridTermList.Count; i++)
+            {
+                if (DataGridTermList[i].Length != 0)
+                {
+                    DataGridItem dgi = new DataGridItem { Term = DataGridTermList[i].Remove(DataGridTermList[i].Length - 1), Translation = DataGridTranslationList[i] };
+                    DataGridItemList.Add(dgi);
+                }
+            }
+
             this.configProvider = configProvider;
             this.openWindowService = openWindowService;
 
+            TreeViewItemsList = GetItems("English");
             OpenPopUpWindowCommand = new RelayCommand(OpenPopUpWindowCommand_Execute);
             OpenTermFontDialogCommand = new RelayCommand(OpenTermFontDialogCommand_Execute);
             OpenTranslationFontDialogCommand = new RelayCommand(OpenTranslationFontDialogCommand_Execute);
+            SelectedItemChangedCommand = new RelayCommand(SelectedItemChangedCommand_Execute);
+        }
+
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "GetDataGridTermTranslationList":
+                    DataGridTermTranslationList = Model.TermTranslationList;
+                    DataGridItemList.Clear();
+                    DataGridTermList.Clear();
+                    DataGridTranslationList.Clear();
+                    StringSlicer();
+                    for (int i = 0; i < DataGridTermList.Count; i++)
+                    {
+                        if (DataGridTermList[i].Length != 0)
+                        {
+                            DataGridItem dgi = new DataGridItem { Term = DataGridTermList[i].Remove(DataGridTermList[i].Length - 1), Translation = DataGridTranslationList[i] };
+                            DataGridItemList.Add(dgi);
+                        }
+                    }
+                    NotifyPropertyChanged();
+                    break;
+
+                case "GetTermTranslationList":
+                    DataGridTermTranslationList = Model.TermTranslationList;
+                    DataGridItemList.Clear();
+                    DataGridTermList.Clear();
+                    DataGridTranslationList.Clear();
+                    StringSlicer();
+                    for (int i = 0; i < DataGridTermList.Count; i++)
+                    {
+                        if (DataGridTermList[i].Length != 0)
+                        {
+                            DataGridItem dgi = new DataGridItem { Term = DataGridTermList[i].Remove(DataGridTermList[i].Length - 1), Translation = DataGridTranslationList[i] };
+                            DataGridItemList.Add(dgi);
+                        }
+                    }
+                    NotifyPropertyChanged();
+                    break;
+            }            
         }
 
         public void OpenPopUpWindowCommand_Execute(object parameter)
@@ -57,32 +161,11 @@ namespace E4Um.ViewModels
             var result = fontDialog.ShowDialog();
             if( result == DialogResult.OK)
             {
-                //configProvider.PopUpFontFamily 
-                //configProvider.PopUpFontType 
                 System.Drawing.Font f = fontDialog.Font;
 
                 StaticConfigProvider.TermFontType = new FontFamily(fontDialog.Font.Name);
                 StaticConfigProvider.TermFontSize = fontDialog.Font.Size;
                 StaticConfigProvider.TermFontStyle = fontDialog.Font.Style;
-                
-                //SessionContext.PopUpFontSize = fontDialog.Font.Size * 96.0 / 72.0;
-
-                //FontFamily ff = new FontFamily(fontDialog.Font.Name);
-                //sessionC+on.PropertyChanged += SessionContext_PropertyChanged;
-                //sessionCon.WindowFont = FontType;
-
-                //popUpWindowModel.FontType = new FontFamily(fontDialog.Font.Name);
-
-                //configProvider.PopUpFontSizees = fontDialog.Font.Size * 96.0 / 72.0;
-
-                //configProvider.PopUpFontWeight = fontDialog.Font.Bold ? "Bold" : "Normal";
-                //configProvider.PopUpFontStyle = fontDialog.Font.Italic ? "Italic" : "Normal";
-
-                //System.Windows.Data.Binding myBinding = new System.Windows.Data.Binding();
-                //myBinding.Source = ConfigProvider.Default;
-                //myBinding.Path = new PropertyPath("PopUpFontType");
-                //myBinding.Mode = BindingMode.TwoWay;
-                //BindingOperations.SetBinding(fontDialog.Font, fontDialog.Font.Name, myBinding);
             }
         }
 
@@ -106,34 +189,74 @@ namespace E4Um.ViewModels
                 StaticConfigProvider.TranslationFontSize = fontDialog.Font.Size;
                 StaticConfigProvider.TranslationFontStyle = fontDialog.Font.Style;
 
-                //SessionContext.PopUpFontSize = fontDialog.Font.Size * 96.0 / 72.0;
-
-                //FontFamily ff = new FontFamily(fontDialog.Font.Name);
-                //sessionC+on.PropertyChanged += SessionContext_PropertyChanged;
-                //sessionCon.WindowFont = FontType;
-
-                //popUpWindowModel.FontType = new FontFamily(fontDialog.Font.Name);
-
-                //configProvider.PopUpFontSizees = fontDialog.Font.Size * 96.0 / 72.0;
-
-                //configProvider.PopUpFontWeight = fontDialog.Font.Bold ? "Bold" : "Normal";
-                //configProvider.PopUpFontStyle = fontDialog.Font.Italic ? "Italic" : "Normal";
-
-                //System.Windows.Data.Binding myBinding = new System.Windows.Data.Binding();
-                //myBinding.Source = ConfigProvider.Default;
-                //myBinding.Path = new PropertyPath("PopUpFontType");
-                //myBinding.Mode = BindingMode.TwoWay;
-                //BindingOperations.SetBinding(fontDialog.Font, fontDialog.Font.Name, myBinding);
             }
         }
 
-        //}
-        //public void Open(object parameter)
-        //{
-        //    PopUpWindow popup = new PopUpWindow("appear");
-        //    popup.Show();
-        //    CloseWindow();
-        //}
+        public void SelectedItemChangedCommand_Execute(object parameter)
+        {
+            FileItem doubleClickedItem = (FileItem)parameter;
+            if(doubleClickedItem != null)
+            {
+                Model.GetTermTranslationList("English\\" + doubleClickedItem.Name);
+                StaticConfigProvider.CurrentCategoryPath = "English\\" + doubleClickedItem.Name;
+                CurrentCategory = doubleClickedItem.Name;
+            }
+            
+        }
+
+        public List<TreeViewItems> GetItems(string path)
+        {
+            var items = new List<TreeViewItems>();
+
+            
+            var dirInfo = new DirectoryInfo(path);
+
+            foreach (var directory in dirInfo.GetDirectories())
+            {
+                var item = new DirectoryItem
+                {
+                    Name = directory.Name,
+                    Items = GetItems(directory.FullName)
+                };
+
+                items.Add(item);
+            }
+
+            foreach (var file in dirInfo.GetFiles())
+            {
+                var item = new FileItem
+                {
+                    Name = file.Name,
+                };
+
+                items.Add(item);
+            }
+
+            return items;
+        }
+
+        public void StringSlicer()
+        {
+
+            foreach (string str in DataGridTermTranslationList)
+            {
+                int index = str.IndexOf(" - ");
+                if (index != -1)
+                {
+                    int translationLength = str.Length - 2 - index;
+                    DataGridTermList.Add(str.Substring(0, index + 2));
+                    DataGridTranslationList.Add(str.Substring(index + 2, translationLength));
+                }
+                else
+                {
+                    int secondIndex = str.IndexOf("-");
+                    int translationLength = str.Length - 1 - secondIndex;
+                    DataGridTermList.Add(str.Substring(0, secondIndex + 1));
+                    DataGridTranslationList.Add(str.Substring(secondIndex + 1, translationLength));
+                }
+
+            }
+        }
 
     }
 

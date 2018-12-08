@@ -3,6 +3,7 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Collections.Generic;
 using System.Windows.Media;
 using System.ComponentModel;
 using E4Um.Models;
@@ -14,13 +15,22 @@ namespace E4Um.ViewModels
     class PopUpWindowModel : ViewModelBase
     {
 
-        #region Term/Translation fields
-        string windowContentTerm;
-        string windowContentTranslation;
+        #region WordsDictionary property
+        Dictionary<string, double> wordsDictionary;
+        public Dictionary<string, double> WordsDictionary
+        {
+            get { return wordsDictionary; }
+            set
+            {
+                wordsDictionary = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Term/Translation properties
-
+        string windowContentTerm;
+        string windowContentTranslation;
         public string WindowContentTerm
         {
             get { return windowContentTerm; }
@@ -141,15 +151,9 @@ namespace E4Um.ViewModels
 
         public PopUpWindowModel(PopUp model, IWindowService windowService, IConfigProvider configProvider)
         {
-            //this.sessionContext = sessionContext;
-            //SessionContext sContext = new SessionContext();
-            //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
-            //StaticConfigProvider.PropertyChanged += SessionContext_PropertyChanged;
-            //this.sessionContext.WindowFont = new FontFamily("Impact");
-            //this.sessionContext.PropertyChanged += SessionContext_PropertyChanged;
-            //FontType = new FontFamily("Impact");
-            Model = model;
 
+            Model = model;
+            WordsDictionary = Model.GetWordsDictionary();
             this.windowService = windowService;
             this.configProvider = configProvider;
 
@@ -236,7 +240,6 @@ namespace E4Um.ViewModels
 
         private void OpenWindow_Timer_Tick(object sender, EventArgs e)
         {
-            //FontType = FontsList[CurrentRecord];
             switch (PopUpMode)
             {
                 case ("default"):
@@ -305,7 +308,7 @@ namespace E4Um.ViewModels
         public void ChangeWindowContent()
         {
             
-           if (CurrentRecord != Model.TermList.Count)
+           if (CurrentRecord < Model.TermList.Count)
            {
                 WindowContentTerm = Model.TermList[CurrentRecord];
                 WindowContentTranslation = Model.TranslationList[CurrentRecord];
@@ -322,64 +325,5 @@ namespace E4Um.ViewModels
         }
 
     }
-    //public interface ISessionContext
-    //{
-    //    FontFamily WindowFont { get; set; }
-    //}
 
-    //public static class SessionContext
-    //{
-    //    static FontFamily popUpFontType;
-    //    static double popUpFontSize;
-    //    static System.Drawing.FontStyle popUpFontStyle;
-    //    public static FontFamily PopUpFontType
-    //    {
-    //        get
-    //        {
-    //            return popUpFontType;
-    //        }
-    //        set
-    //        {
-    //            popUpFontType = value;
-    //            NotifyPropertyChanged();
-    //        }
-    //    }
-    //    public static double PopUpFontSize
-    //    {
-    //        get
-    //        {
-    //            return popUpFontSize;
-    //        }
-    //        set
-    //        {
-    //            popUpFontSize = value;
-    //            NotifyPropertyChanged();
-    //        }
-    //    }
-    //    public static System.Drawing.FontStyle PopUpFontStyle
-    //    {
-    //        get
-    //        {
-    //            return popUpFontStyle;
-    //        }
-    //        set
-    //        {
-    //            popUpFontStyle = value;
-    //            NotifyPropertyChanged();
-    //        }
-    //    }
-
-    //    public static event PropertyChangedEventHandler PropertyChanged;
-
-    //    // This method is called by the Set accessor of each property.
-    //    // The CallerMemberName attribute that is applied to the optional propertyName
-    //    // parameter causes the property name of the caller to be substituted as an argument.
-    //    private static void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-    //    {
-    //        if (PropertyChanged != null)
-    //        {
-    //            PropertyChanged(null, new PropertyChangedEventArgs(propertyName));
-    //        }
-    //    }
-    //}
 }

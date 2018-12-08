@@ -32,5 +32,8 @@
     <Setting Name="delayMilliSeconds" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
+    <Setting Name="currentCategoryPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">English\\Погода. Weather.txt</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

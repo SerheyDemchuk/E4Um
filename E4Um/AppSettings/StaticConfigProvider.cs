@@ -23,6 +23,10 @@ namespace E4Um.AppSettings
         static bool isTranslationUpper;
         #endregion
 
+        #region CurrentCategoryPathField
+        static string currentCategoryPath;
+        #endregion
+
         #region IntervalsProperties
         public static int SecondsToOpen
         {
@@ -125,7 +129,23 @@ namespace E4Um.AppSettings
             }
         }
         #endregion
-        
+
+        #region CurrentCategoryPathProperty
+        public static string CurrentCategoryPath
+        {
+            get { return currentCategoryPath; }
+            set
+            {
+                if(currentCategoryPath != value)
+                {
+                    currentCategoryPath = value;
+                    StaticNotifyPropertyChanged();
+                }
+                
+            }
+        }
+        #endregion
+
         static StaticConfigProvider()
         {
             TermFontType = new FontFamily(Properties.Settings.Default.termFontType);
@@ -138,6 +158,7 @@ namespace E4Um.AppSettings
             IsTranslationUpper = Properties.Settings.Default.isTranslationUpper;
             SecondsToOpen = Properties.Settings.Default.secondsToOpen;
             DelayMilliSeconds = Properties.Settings.Default.delayMilliSeconds;
+            CurrentCategoryPath = Properties.Settings.Default.currentCategoryPath;
         }
 
         public static void SaveSettings()
@@ -152,6 +173,7 @@ namespace E4Um.AppSettings
             Properties.Settings.Default.isTranslationUpper = IsTranslationUpper;
             Properties.Settings.Default.secondsToOpen = SecondsToOpen;
             Properties.Settings.Default.delayMilliSeconds = DelayMilliSeconds;
+            Properties.Settings.Default.currentCategoryPath = CurrentCategoryPath;
 
             Properties.Settings.Default.Save();
         }

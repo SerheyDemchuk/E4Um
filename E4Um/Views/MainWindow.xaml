@@ -4,20 +4,24 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:cp="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:E4Um"
+        xmlns:behaviours="clr-namespace:E4Um.Behaviours"
         xmlns:helpers="clr-namespace:E4Um.Helpers"
         xmlns:p="clr-namespace:E4Um.AppSettings"
         xmlns:vm="clr-namespace:E4Um.ViewModels"
         xmlns:con="clr-namespace:E4Um.Converters"
         mc:Ignorable="d"
-        Title="English For You" Height="500" Width="565" ResizeMode="CanMinimize" ShowMaxRestoreButton="False" UseLayoutRounding="True"
-        helpers:DialogCloser.DialogResult="{Binding CloseWindowFlag}">
+        Title="Instant English" Height="500" Width="565" ResizeMode="CanMinimize" ShowMaxRestoreButton="False" UseLayoutRounding="True"
+        helpers:DialogCloser.DialogResult="{Binding CloseWindowFlag}" >
     <Window.Resources>
+        <helpers:DirectoryItem x:Key="directoryItem" />
         <p:StaticConfigProvider x:Key="staticConfigProvider" />
         <con:AppearModeToBooleanValueConverter x:Key="appearModeToBooleanValueConverter" />
         <con:PopupModeToBooleanValueConverter x:Key="popupModeToBooleanValueConverter" />
         <con:DefaultModeToBooleanValueConverter x:Key="defaultModeToBooleanValueConverter" />
+        <con:FileNameToFileItemValueConverter x:Key="fileNameToFileItemValueConverter" />
         <con:ModeToBooleanSizeToContentToggleSwitchButtonValueConverter x:Key="modeToBooleanSizeToContentToggleSwitchButtonValueConverter" />
         <con:ModeToBooleanSliderValueConverter x:Key="modeToBooleanSliderValueConverter" />
         <con:SizeToContentToBooleanSliderValueConverter x:Key="sizeToContentToBooleanSliderValueConverter" />
@@ -49,7 +53,7 @@
                                 <RowDefinition Height="0.75*"/>
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <TextBlock Height="25" VerticalAlignment="Bottom" Text="Появление" TextAlignment="Center" FontSize="15" />
+                            <TextBlock Height="25" VerticalAlignment="Bottom" Text="Появление" TextAlignment="Center" FontSize="14" />
                             <Controls:ToggleSwitchButton Grid.Row="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" VerticalAlignment="Top" IsChecked="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpMode, Converter={StaticResource appearModeToBooleanValueConverter}, Mode=TwoWay}"/>
                         </Grid>
                         <Grid Grid.Row="1">
@@ -57,7 +61,7 @@
                                 <RowDefinition Height="0.75*"/>
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <TextBlock Height="25" VerticalAlignment="Bottom" Text="Выплывание" TextAlignment="Center" FontSize="15" />
+                            <TextBlock Height="25" VerticalAlignment="Bottom" Text="Выплывание" TextAlignment="Center" FontSize="14" />
                             <Controls:ToggleSwitchButton Grid.Row="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" VerticalAlignment="Top" IsChecked="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpMode, Converter={StaticResource popupModeToBooleanValueConverter}, Mode=TwoWay}"/>
                         </Grid>
                         <Grid Grid.Row="2">
@@ -65,7 +69,7 @@
                                 <RowDefinition Height="0.75*"/>
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <TextBlock Height="25" VerticalAlignment="Bottom" Text="Статический" TextAlignment="Center" FontSize="15" />
+                            <TextBlock Height="25" VerticalAlignment="Bottom" Text="Статический" TextAlignment="Center" FontSize="14" />
                             <Controls:ToggleSwitchButton Grid.Row="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" VerticalAlignment="Top" IsChecked="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpMode, Converter={StaticResource defaultModeToBooleanValueConverter}, Mode=TwoWay}"/>
                         </Grid>
                         <Image Grid.Column="1" Source="{StaticResource AppearModeImage}" Width="350" Height="105" />
@@ -123,7 +127,7 @@
                         <TextBlock x:Name="Term" Text="Шрифт" TextAlignment="Center" Margin="0,15,0,7" />
                         <TextBlock x:Name="TermCase" Grid.Row="1" Text="Заглавные буквы" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,8,0,9" />
                         <TextBlock x:Name="Translation" Grid.Row="2" Grid.Column="0" Text="Шрифт" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,8,0,9" />
-                        <TextBlock x:Name="TranslationCase" Grid.Row="3" Grid.Column="0" Text="Заглавные буквы" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,11,0,28" />
+                        <TextBlock x:Name="TranslationCase" Grid.Row="3" Grid.Column="0" Text="Заглавные буквы" TextAlignment="Center" VerticalAlignment="Center" Height="18" Margin="0,11,0,28"/>
                         <Button Width="80" Height="25" Grid.Column="1" Content="Термин" Command="{Binding OpenTermFontDialogCommand}" Margin="23,11,23,0" Padding="0" VerticalAlignment="Top"/>
                         <Controls:ToggleSwitchButton Grid.Row="1" Grid.Column="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" IsChecked="{Binding Source={StaticResource staticConfigProvider}, Path=IsTermUpper, Mode=TwoWay}" />
                         <Button Width="80" Height="25" Grid.Row="2" Grid.Column="1" Content="Перевод" Command="{Binding OpenTranslationFontDialogCommand}" Margin="23,5,23,0" Padding="0" VerticalAlignment="Top" />
@@ -151,14 +155,46 @@
         <TabItem Header="Категории">
             <Grid Background="#FFE5E5E5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.15*" />
+                    <RowDefinition Height="0.5*" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.3*"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <!--<TextBlock Text="{Binding }"-->
+                <TextBlock Grid.ColumnSpan="2" Text="{Binding CurrentCategory}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26" Foreground="#cd0000" Margin="0,0,0,5"/>
+                <!-- TreeView and DataGrid -->
+                <TreeView x:Name="TreeView" Grid.Row="1" ItemsSource="{Binding TreeViewItemsList}" Margin="10,0,10,10" FontSize="20" >
+                        <TreeView.Resources>
+                        <!--<HierarchicalDataTemplate DataType="{x:Type helpers:DirectoryItem}"
+                                  ItemsSource="{Binding Items}">
+                            <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
+                        </HierarchicalDataTemplate>-->
+                        <DataTemplate DataType="{x:Type helpers:FileItem}">
+                            <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Name}" TextAlignment="Center" />
+                            </DataTemplate>
+                        </TreeView.Resources>
+
+                    <i:Interaction.Behaviors>
+                        <behaviours:BindableSelectedItemBehavior SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
+                    </i:Interaction.Behaviors>
+                    
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}" CommandParameter="{Binding ElementName=TreeView, Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                </TreeView>
+
+                <DataGrid Grid.Row="2" Margin="10,0,10,10" AutoGenerateColumns="False" ItemsSource="{Binding DataGridItemList}" IsReadOnly="True" >
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="Термин" Width="1*" Binding="{Binding Term}" FontSize="22"/>
+
+                        <DataGridTextColumn Header="Перевод" Width="1*" Binding="{Binding Translation}" FontSize="22"/>
+                        
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <!-- /TreeView and DataGrid -->
             </Grid>
         </TabItem>
     </TabControl>
