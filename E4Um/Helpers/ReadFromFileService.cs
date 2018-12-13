@@ -8,6 +8,7 @@ namespace E4Um.Helpers
     class ReadFromFileService
     {
         static Dictionary<string, double> wordsDictionary = new Dictionary<string, double>();
+        static Dictionary<string, double> currentWordsDictionary = new Dictionary<string, double>();
         //static Dictionary<string, double> dataGridWordsDictionary = new Dictionary<string, double>();
 
         static List<string> termTranslationList = new List<string>();
@@ -19,7 +20,24 @@ namespace E4Um.Helpers
             wordsDictionary.Clear();
             foreach(string str in termTranslationList)
             {
-                wordsDictionary.Add(str, 5);
+                wordsDictionary.Add(str.ToLower(), 5);
+            }
+            return wordsDictionary;
+        }
+
+        public static Dictionary<string, double> ReturnCurrentWordsDictionary(int blockVolume)
+        {
+            int volume = 0;
+            currentWordsDictionary.Clear();
+            foreach (KeyValuePair<string, double> record in wordsDictionary)
+            {
+                if (volume != blockVolume)
+                {
+                    currentWordsDictionary.Add(record.Key, record.Value);
+                    volume++;
+                }
+                else break;
+                
             }
             return wordsDictionary;
         }
@@ -42,6 +60,16 @@ namespace E4Um.Helpers
             if (callerMethodName != "SelectedItem")
                 StringSlicer(StaticConfigProvider.IsTermUpper, StaticConfigProvider.IsTranslationUpper);
             return termTranslationList;
+        }
+
+        public static void SortTermTranslationList(Dictionary<string, double> wordsDictionary)
+        {
+            termTranslationList.Clear();
+            foreach (KeyValuePair<string, double> record in wordsDictionary)
+            {
+                termTranslationList.Add(record.Key);
+            }
+            StringSlicer(StaticConfigProvider.IsTermUpper, StaticConfigProvider.IsTranslationUpper);
         }
 
         public static List<string> ReturnTermList()
@@ -112,6 +140,7 @@ namespace E4Um.Helpers
                     }
                 }
             }
+
         }
 
         //public static void DataGridStringSlicer()

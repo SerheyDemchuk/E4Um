@@ -68,6 +68,7 @@ namespace E4Um.ViewModels
         public RelayCommand OpenTermFontDialogCommand { get; set; }
         public RelayCommand OpenTranslationFontDialogCommand { get; set; }
         public RelayCommand SelectedItemChangedCommand { get; set; }
+        public RelayCommand OpenTestWindowCommand { get; set; }
 
         public MainWindowModel(PopUp model, IConfigProvider configProvider, IWindowService openWindowService)
         {
@@ -100,6 +101,7 @@ namespace E4Um.ViewModels
             OpenTermFontDialogCommand = new RelayCommand(OpenTermFontDialogCommand_Execute);
             OpenTranslationFontDialogCommand = new RelayCommand(OpenTranslationFontDialogCommand_Execute);
             SelectedItemChangedCommand = new RelayCommand(SelectedItemChangedCommand_Execute);
+            OpenTestWindowCommand = new RelayCommand(OpenTestWindowCommand_Execute);
         }
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -202,6 +204,11 @@ namespace E4Um.ViewModels
                 CurrentCategory = doubleClickedItem.Name;
             }
             
+        }
+
+        public void OpenTestWindowCommand_Execute(object paremeter)
+        {
+            openWindowService.CreateTestWindow();
         }
 
         public List<TreeViewItems> GetItems(string path)

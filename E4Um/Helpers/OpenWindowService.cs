@@ -20,6 +20,9 @@ namespace E4Um.Helpers
         void CreatePopUpWindow(string mode, int delayMilliSeconds, string popUpSizeToContent);
         void ShowPopUpWindow(string mode);
         void HidePopUpWindow(string mode);
+        void CreateTestWindow();
+        void ShowTestWindow();
+        void HideTestWindow();
         //void CreateMainWindow();
         //void ShowMainWindow();
     }
@@ -181,6 +184,59 @@ namespace E4Um.Helpers
             }
         }
 
+        public void CreateTestWindow()
+        {
+            Point pt = SystemParameters.WorkArea.TopLeft;
+            TestWindow testWindow = new TestWindow() { DataContext = new TestWindowModel(new Models.PopUp(), new OpenWindowService()) };
+
+            DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+            testWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+
+            testWindow.ShowActivated = false;
+            testWindow.Show();
+
+        }
+
+        public void ShowTestWindow()
+        {
+            Point pt = SystemParameters.WorkArea.TopLeft;
+            Window testWindow = null;
+            DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
+
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window.Title == "TestWindow")
+                {
+                    testWindow = window;
+                }
+            }
+            testWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+        }
+
+        public void HideTestWindow()
+        {
+            Window testWindow = null;
+
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window.Title == "TestWindow")
+                {
+                    testWindow = window;
+                }
+            }
+
+            Task.Run(() =>
+            {
+                //if(!isAnswerCorrect)
+                Thread.Sleep(1000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.4));
+                    testWindow.BeginAnimation(UIElement.OpacityProperty, animation);
+                });
+            });
+
+        }
         //public void CreateMainWindow()
         //{
         //    MainWindow mainWindow = new MainWindow() { DataContext = new MainWindowModel()};

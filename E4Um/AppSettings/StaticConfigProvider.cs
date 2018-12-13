@@ -146,6 +146,19 @@ namespace E4Um.AppSettings
         }
         #endregion
 
+        #region IsTestOnProperty
+        static bool isTestOn;
+        public static bool IsTestOn
+        {
+            get { return isTestOn; }
+            set
+            {
+                isTestOn = value;
+                StaticNotifyPropertyChanged();
+            }
+        }
+        #endregion
+
         static StaticConfigProvider()
         {
             TermFontType = new FontFamily(Properties.Settings.Default.termFontType);
@@ -159,6 +172,7 @@ namespace E4Um.AppSettings
             SecondsToOpen = Properties.Settings.Default.secondsToOpen;
             DelayMilliSeconds = Properties.Settings.Default.delayMilliSeconds;
             CurrentCategoryPath = Properties.Settings.Default.currentCategoryPath;
+            IsTestOn = Properties.Settings.Default.isTestOn;
         }
 
         public static void SaveSettings()
@@ -174,6 +188,7 @@ namespace E4Um.AppSettings
             Properties.Settings.Default.secondsToOpen = SecondsToOpen;
             Properties.Settings.Default.delayMilliSeconds = DelayMilliSeconds;
             Properties.Settings.Default.currentCategoryPath = CurrentCategoryPath;
+            Properties.Settings.Default.isTestOn = IsTestOn;
 
             Properties.Settings.Default.Save();
         }

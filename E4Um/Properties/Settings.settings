@@ -35,5 +35,8 @@
     <Setting Name="currentCategoryPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">English\\Погода. Weather.txt</Value>
     </Setting>
+    <Setting Name="isTestOn" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

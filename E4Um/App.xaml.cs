@@ -2,6 +2,7 @@
 using E4Um.AppSettings;
 using E4Um.Helpers;
 using E4Um.ViewModels;
+using E4Um.Views;
 
 namespace E4Um
 {

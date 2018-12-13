@@ -21,7 +21,6 @@
         <con:AppearModeToBooleanValueConverter x:Key="appearModeToBooleanValueConverter" />
         <con:PopupModeToBooleanValueConverter x:Key="popupModeToBooleanValueConverter" />
         <con:DefaultModeToBooleanValueConverter x:Key="defaultModeToBooleanValueConverter" />
-        <con:FileNameToFileItemValueConverter x:Key="fileNameToFileItemValueConverter" />
         <con:ModeToBooleanSizeToContentToggleSwitchButtonValueConverter x:Key="modeToBooleanSizeToContentToggleSwitchButtonValueConverter" />
         <con:ModeToBooleanSliderValueConverter x:Key="modeToBooleanSliderValueConverter" />
         <con:SizeToContentToBooleanSliderValueConverter x:Key="sizeToContentToBooleanSliderValueConverter" />
@@ -72,9 +71,9 @@
                             <TextBlock Height="25" VerticalAlignment="Bottom" Text="Статический" TextAlignment="Center" FontSize="14" />
                             <Controls:ToggleSwitchButton Grid.Row="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" VerticalAlignment="Top" IsChecked="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpMode, Converter={StaticResource defaultModeToBooleanValueConverter}, Mode=TwoWay}"/>
                         </Grid>
-                        <Image Grid.Column="1" Source="{StaticResource AppearModeImage}" Width="350" Height="105" />
-                        <Image Grid.Row="1" Grid.Column="1" Source="{StaticResource PopUpModeImage}" Width="350" Height="105" />
-                        <Image Grid.Row="2" Grid.Column="1" Source="{StaticResource DefaultModeImage}" Width="350" Height="105" />
+                        <Image Grid.Column="1" Source="{StaticResource appearModeImage}" Width="350" Height="105" />
+                        <Image Grid.Row="1" Grid.Column="1" Source="{StaticResource popUpModeImage}" Width="350" Height="105" />
+                        <Image Grid.Row="2" Grid.Column="1" Source="{StaticResource defaultModeImage}" Width="350" Height="105" />
                     </Grid>
                 </GroupBox>
             </Grid>
@@ -195,6 +194,21 @@
 
                 </DataGrid>
                 <!-- /TreeView and DataGrid -->
+            </Grid>
+        </TabItem>
+        <TabItem Header="ITest">
+            <Grid Background="#FFE5E5E5">
+                <GroupBox Grid.Column="0" x:Name="TestGroupBox" Header="Інтелектуальна система підбору слів за пріорітетами" Margin="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.7*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Height="25" Text="ITest" TextAlignment="Center" VerticalAlignment="Bottom" FontSize="14" />
+                        <Controls:ToggleSwitchButton Grid.Row="1" Style="{StaticResource SmallerMetroToggleSwitchButton}" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource staticConfigProvider}, Path=IsTestOn, Mode=TwoWay}" />
+                        <Button Width="100" Height="20" Content="Test" Command="{Binding OpenTestWindowCommand}" />
+                    </Grid>
+                </GroupBox>
             </Grid>
         </TabItem>
     </TabControl>

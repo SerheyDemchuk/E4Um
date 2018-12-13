@@ -8,7 +8,6 @@ namespace E4Um.AppSettings
 {
     public interface IConfigProvider
     {
-        bool IsTestOn { get; set; }
         string CurrentCategory { get; set; }
         string PopUpMode { get; set; }
         double PopUpWidth { get; set; }
@@ -25,14 +24,6 @@ namespace E4Um.AppSettings
         public static ConfigProvider Default
         {
             get { return defaultInstance; }
-        }
-
-        [UserScopedSetting()]
-        [DefaultSettingValue("false")]
-        public bool IsTestOn
-        {
-            get { return (bool)this["IsTestOn"]; }
-            set { this["IsTestOn"] = value; }
         }
 
         [UserScopedSetting()]

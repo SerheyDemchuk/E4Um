@@ -149,6 +149,13 @@ namespace E4Um.ViewModels
         int CurrentRecord { get; set; }
         bool DefaultModeOffset { get; set; }
 
+        // Test-related data
+        List<double> PriorityList { get; set; }
+        int HighPriorityCounter { get; set; }
+        int MiddlePriorityCounter { get; set; }
+        int LowPriorityCounter { get; set; }
+        // /Test-related data
+
         public PopUpWindowModel(PopUp model, IWindowService windowService, IConfigProvider configProvider)
         {
 
@@ -160,6 +167,10 @@ namespace E4Um.ViewModels
             PopUpMode = this.configProvider.PopUpMode;
             CurrentRecord = 0;
             DefaultModeOffset = false;
+            PriorityList = new List<double>();
+            HighPriorityCounter = 0;
+            MiddlePriorityCounter = 0;
+            LowPriorityCounter = 0;
 
             ChangeWindowContent();
 
@@ -170,6 +181,7 @@ namespace E4Um.ViewModels
             TermFontStyle = StaticConfigProvider.TermFontStyle;
             TranslationFontStyle = StaticConfigProvider.TranslationFontStyle;
 
+            PopUp.StaticPropertyChanged += Model_PropertyChanged;
             StaticConfigProvider.StaticPropertyChanged += StaticConfigProvider_PropertyChanged;
             ConfigProvider.StaticPropertyChanged += ConfigProvider_PropertyChanged;
 
@@ -185,6 +197,18 @@ namespace E4Um.ViewModels
             openWindowTimer.Tick += OpenWindow_Timer_Tick;
             openWindowTimer.Start();
 
+        }
+
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "WordsDictionary")
+            {
+                WordsDictionary = PopUp.WordsDictionary;
+                foreach(KeyValuePair<string, double> record in WordsDictionary)
+                {
+                    PriorityList.Add(record.Value);
+                }
+            }
         }
 
         private void ConfigProvider_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -235,6 +259,12 @@ namespace E4Um.ViewModels
                 case "TranslationFontStyle":
                     TranslationFontStyle = StaticConfigProvider.TranslationFontStyle;
                     break;
+                case "IsTestOn":
+                    if (StaticConfigProvider.IsTestOn == true)
+                        openWindowTimer.Stop();
+                    else openWindowTimer.Start();
+                    break;
+
             }
         }
 
@@ -307,12 +337,38 @@ namespace E4Um.ViewModels
 
         public void ChangeWindowContent()
         {
-            
+
            if (CurrentRecord < Model.TermList.Count)
            {
-                WindowContentTerm = Model.TermList[CurrentRecord];
-                WindowContentTranslation = Model.TranslationList[CurrentRecord];
-                CurrentRecord++;
+                if(PriorityList.Count != 0)
+                {
+                    if (PriorityList[CurrentRecord] == 5)
+                    {
+                        WindowContentTerm = Model.TermList[CurrentRecord];
+                        WindowContentTranslation = Model.TranslationList[CurrentRecord];
+                        CurrentRecord++;
+                    }
+                    else if (PriorityList[CurrentRecord] == 3 && HighPriorityCounter != 8)
+                    {
+                        HighPriorityCounter++;
+                        CurrentRecord = 0;
+                        WindowContentTerm = Model.TermList[CurrentRecord];
+                        WindowContentTranslation = Model.TranslationList[CurrentRecord];
+                        CurrentRecord++;
+                    }
+                    else if (PriorityList[CurrentRecord] == 3 && HighPriorityCounter == 8)
+                    {
+                        WindowContentTerm = Model.TermList[CurrentRecord];
+                        WindowContentTranslation = Model.TranslationList[CurrentRecord];
+                        CurrentRecord++;
+                    }
+                }
+                else
+                {
+                    WindowContentTerm = Model.TermList[CurrentRecord];
+                    WindowContentTranslation = Model.TranslationList[CurrentRecord];
+                    CurrentRecord++;
+                }
            }
            else
             {

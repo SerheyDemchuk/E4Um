@@ -1,0 +1,119 @@
+﻿<Controls:MetroWindow x:Class="E4Um.Views.TestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:con="clr-namespace:E4Um.Converters"
+        xmlns:local="clr-namespace:E4Um.Views"
+        xmlns:helpers="clr-namespace:E4Um.Helpers"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        mc:Ignorable="d"
+        Title="TestWindow" Height="240" Width="250" ResizeMode="NoResize" ShowTitleBar="False" AllowsTransparency="True" >
+    <Window.Resources>
+        <con:DictionaryStringBoolToStringValueConverter x:Key="dictionaryStringBoolToStringValueConverter" />
+        <con:TranslationMultiValueConverter x:Key="translationMultiValueConverter" />
+        <con:BooleanToVisibilityValueConverter x:Key="booleanToVisibilityValueConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Question Counter-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.1*"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Image Source="{StaticResource checkmark}" Visibility="{Binding Model.IsTestOpenFirstly, Converter={StaticResource booleanToVisibilityValueConverter}}" Height="15" Margin="2, 15, 0, 0" VerticalAlignment="Top"/>
+            <TextBlock Grid.Column="1" Text="{Binding CorrectAnswersCounter}" Visibility="{Binding Model.IsTestOpenFirstly, Converter={StaticResource booleanToVisibilityValueConverter}}" TextAlignment="Center" VerticalAlignment="Top" Margin="0, 15, 0, 0" />
+        </Grid>
+        <!-- /Question Counter-->
+
+        <Image Source="{StaticResource cancelmark}" Visibility="{Binding Model.IsTestOpenFirstly, Converter={StaticResource booleanToVisibilityValueConverter}}" Grid.Column="1" Height="11" Margin="8, 18, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Column="1" Visibility="{Binding Model.IsTestOpenFirstly, Converter={StaticResource booleanToVisibilityValueConverter}}" TextAlignment="Left" VerticalAlignment="Top" Margin="25, 15, 0, 0" >
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0}/{1}">
+                    <Binding Path="IncorrectAnswersCounter"/>
+                    <Binding Path="BlockVolume"/>
+                    <Binding />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        
+        <TextBlock Text="{Binding Term}" Grid.ColumnSpan="2" TextAlignment="Center" VerticalAlignment="Bottom" MaxWidth="230" FontSize="28" Margin="0,0,0,15"/>
+
+        <TextBlock x:Name="TranslationOne" Text="{Binding TranslationOne, Converter={StaticResource dictionaryStringBoolToStringValueConverter}}" Grid.ColumnSpan="2" TextAlignment="Center" Grid.Row="1" MaxWidth="175" FontSize="22" Cursor="Hand" Foreground="{Binding TranslationOneColor, Converter={StaticResource ColorToSolidColorBrush_ValueConverter} }" >
+            <TextBlock.InputBindings>
+                <MouseBinding Command="{Binding TranslationClickCommand}" MouseAction="LeftClick">
+                    <MouseBinding.CommandParameter>
+                        <MultiBinding Converter="{StaticResource translationMultiValueConverter}">
+                            <Binding ElementName="TranslationOne" Path="Text" />
+                            <Binding ElementName="TranslationOne" Path="Name" />
+                        </MultiBinding>
+                    </MouseBinding.CommandParameter>
+                </MouseBinding>
+            </TextBlock.InputBindings>
+        </TextBlock>
+
+        <TextBlock x:Name="TranslationTwo" Text="{Binding TranslationTwo, Converter={StaticResource dictionaryStringBoolToStringValueConverter}}" Grid.ColumnSpan="2" TextAlignment="Center" Grid.Row="2" MaxWidth="175" FontSize="22" Cursor="Hand" Foreground="{Binding TranslationTwoColor, Converter={StaticResource ColorToSolidColorBrush_ValueConverter} }" >
+            <TextBlock.InputBindings>
+                <MouseBinding Command="{Binding TranslationClickCommand}" MouseAction="LeftClick" >
+                    <MouseBinding.CommandParameter>
+                        <MultiBinding Converter="{StaticResource translationMultiValueConverter}">
+                            <Binding ElementName="TranslationTwo" Path="Text" />
+                            <Binding ElementName="TranslationTwo" Path="Name" />
+                        </MultiBinding>
+                    </MouseBinding.CommandParameter>
+                </MouseBinding>
+            </TextBlock.InputBindings>
+        </TextBlock>
+
+        <TextBlock x:Name="TranslationThree" Text="{Binding TranslationThree, Converter={StaticResource dictionaryStringBoolToStringValueConverter}}" Grid.ColumnSpan="2" TextAlignment="Center" Grid.Row="3" MaxWidth="175" FontSize="22" Cursor="Hand" Foreground="{Binding TranslationThreeColor, Converter={StaticResource ColorToSolidColorBrush_ValueConverter} }" >
+            <TextBlock.InputBindings>
+                <MouseBinding Command="{Binding TranslationClickCommand}" MouseAction="LeftClick" >
+                    <MouseBinding.CommandParameter>
+                        <MultiBinding Converter="{StaticResource translationMultiValueConverter}">
+                            <Binding ElementName="TranslationThree" Path="Text" />
+                            <Binding ElementName="TranslationThree" Path="Name" />
+                        </MultiBinding>
+                    </MouseBinding.CommandParameter>
+                </MouseBinding>
+            </TextBlock.InputBindings>
+        </TextBlock>
+
+        <TextBlock x:Name="TranslationFour" Text="{Binding TranslationFour, Converter={StaticResource dictionaryStringBoolToStringValueConverter}}" Grid.ColumnSpan="2" TextAlignment="Center" Grid.Row="4" MaxWidth="175" FontSize="22" Cursor="Hand" Foreground="{Binding TranslationFourColor, Converter={StaticResource ColorToSolidColorBrush_ValueConverter} }" >
+            <TextBlock.InputBindings>
+                <MouseBinding Command="{Binding TranslationClickCommand}" MouseAction="LeftClick" >
+                    <MouseBinding.CommandParameter>
+                        <MultiBinding Converter="{StaticResource translationMultiValueConverter}">
+                            <Binding ElementName="TranslationFour" Path="Text" />
+                            <Binding ElementName="TranslationFour" Path="Name" />
+                        </MultiBinding>
+                    </MouseBinding.CommandParameter>
+                </MouseBinding>
+            </TextBlock.InputBindings>
+        </TextBlock>
+
+        <!-- Dashes -->
+        <TextBlock Text="&#x2014;" Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="&#x2014;" Grid.Row="2" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="&#x2014;" Grid.Row="3" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="&#x2014;" Grid.Row="4" TextAlignment="Center" VerticalAlignment="Center"/>
+        <!-- /Dashes -->
+        
+    </Grid>
+</Controls:MetroWindow>

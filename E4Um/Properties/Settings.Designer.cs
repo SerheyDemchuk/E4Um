@@ -154,5 +154,17 @@ namespace E4Um.Properties {
                 this["currentCategoryPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isTestOn {
+            get {
+                return ((bool)(this["isTestOn"]));
+            }
+            set {
+                this["isTestOn"] = value;
+            }
+        }
     }
 }

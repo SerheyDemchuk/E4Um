@@ -7,14 +7,16 @@
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="PopUpModeImage" UriSource="Resources/PopUpMode.png" />
-            <BitmapImage x:Key="AppearModeImage" UriSource="Resources/AppearMode.png" />
-            <BitmapImage x:Key="DefaultModeImage" UriSource="Resources/DefaultMode.png" />
+            <BitmapImage x:Key="popUpModeImage" UriSource="Resources/PopUpMode.png" />
+            <BitmapImage x:Key="appearModeImage" UriSource="Resources/AppearMode.png" />
+            <BitmapImage x:Key="defaultModeImage" UriSource="Resources/DefaultMode.png" />
+            <BitmapImage x:Key="checkmark" UriSource="Resources/checkmark.png" />
+            <BitmapImage x:Key="cancelmark" UriSource="Resources/x-mark-24.png" />
             <p:ConfigProvider x:Key="configProvider" />
             <p:StaticConfigProvider x:Key="staticConfigProvider" />
             <con:ColorToSolidColorBrushValueConverter x:Key="ColorToSolidColorBrush_ValueConverter"/>
             <ResourceDictionary.MergedDictionaries>
-                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <!-- MahApps.Metro resource dictionaries -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
