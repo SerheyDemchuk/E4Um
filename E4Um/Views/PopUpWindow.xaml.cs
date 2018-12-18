@@ -8,11 +8,16 @@ namespace E4Um.Views
     /// </summary>
     public partial class PopUpWindow : Window
     {
-
-        public PopUpWindow(string mode)
+        Point pt = SystemParameters.WorkArea.TopLeft;
+        public PopUpWindow()
         {
             InitializeComponent();
-            
+
+            pt.Offset(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+            pt.Offset(-Width, -Height);
+            Left = pt.X - 5;
+            Top = pt.Y - 5;
+
             //Task.Run(() =>
             //{
             //    showWindow(mode);

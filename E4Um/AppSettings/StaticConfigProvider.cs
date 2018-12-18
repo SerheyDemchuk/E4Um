@@ -7,6 +7,19 @@ namespace E4Um.AppSettings
 {
     public class StaticConfigProvider
     {
+        #region Dictionary
+        static string wordsDictionary;
+        public static string WordsDictionary
+        {
+            get { return wordsDictionary; }
+            set
+            {
+                wordsDictionary = value;
+                StaticNotifyPropertyChanged();
+            }
+        }
+        #endregion
+
         #region IntervalsFields
         static int secondsToOpen;
         static double delayMilliSeconds;
@@ -159,8 +172,35 @@ namespace E4Um.AppSettings
         }
         #endregion
 
+        #region IsTestOpenFirstly
+        static bool isTestOpenFirstly;
+        public static bool IsTestOpenFirstly
+        {
+            get { return isTestOpenFirstly; }
+            set
+            {
+                isTestOpenFirstly = value;
+                StaticNotifyPropertyChanged();
+            }
+        }
+        #endregion
+
+        #region StartTimer
+        static bool startTimer;
+        public static bool StartTimer
+        {
+            get { return startTimer; }
+            set
+            {
+                startTimer = value;
+                StaticNotifyPropertyChanged();
+            }
+        }
+        #endregion
+
         static StaticConfigProvider()
         {
+            WordsDictionary = Properties.Settings.Default.wordsDictionary;
             TermFontType = new FontFamily(Properties.Settings.Default.termFontType);
             TranslationFontType = new FontFamily(Properties.Settings.Default.translationFontType);
             TermFontSize = Properties.Settings.Default.termFontSize;
@@ -173,10 +213,13 @@ namespace E4Um.AppSettings
             DelayMilliSeconds = Properties.Settings.Default.delayMilliSeconds;
             CurrentCategoryPath = Properties.Settings.Default.currentCategoryPath;
             IsTestOn = Properties.Settings.Default.isTestOn;
+            IsTestOpenFirstly = Properties.Settings.Default.isTestOpenFirstly;
+            StartTimer = Properties.Settings.Default.startTimer;
         }
 
         public static void SaveSettings()
         {
+            Properties.Settings.Default.wordsDictionary = wordsDictionary;
             Properties.Settings.Default.termFontType = TermFontType.ToString();
             Properties.Settings.Default.translationFontType = TranslationFontType.ToString();
             Properties.Settings.Default.termFontSize = TermFontSize;
@@ -189,6 +232,8 @@ namespace E4Um.AppSettings
             Properties.Settings.Default.delayMilliSeconds = DelayMilliSeconds;
             Properties.Settings.Default.currentCategoryPath = CurrentCategoryPath;
             Properties.Settings.Default.isTestOn = IsTestOn;
+            Properties.Settings.Default.isTestOpenFirstly = IsTestOpenFirstly;
+            Properties.Settings.Default.startTimer = StartTimer;
 
             Properties.Settings.Default.Save();
         }

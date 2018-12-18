@@ -9,8 +9,7 @@
         mc:Ignorable="d"
         Title="PopUp" 
         Width="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidth, Mode=TwoWay}" 
-        Height="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpHeight, Mode=TwoWay}" 
-        Background="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpBackground, Converter={StaticResource ColorToSolidColorBrush_ValueConverter}, Mode=TwoWay}" 
+        Height="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpHeight, Mode=TwoWay}"  
         SizeToContent="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpWidthToContent, Mode=TwoWay}" 
         ResizeMode="NoResize" Topmost="True" Margin="0,0,0,0" ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True" MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         FontSize="36">
@@ -19,6 +18,10 @@
         <con:SystemDrawingToSystemWindowsFontWeightValueConverter x:Key="SystemDrawingToSystemWindowsFontWeightValueConverter" />
     </Window.Resources>
 
+    <Window.Background>
+        <SolidColorBrush Color="{Binding Source={x:Static p:ConfigProvider.Default}, Path=PopUpBackground, Mode=TwoWay}" />
+    </Window.Background>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

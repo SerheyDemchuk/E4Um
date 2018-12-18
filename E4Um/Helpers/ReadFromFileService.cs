@@ -2,6 +2,7 @@
 using System.Text;
 using System.IO;
 using E4Um.AppSettings;
+using Newtonsoft.Json;
 
 namespace E4Um.Helpers
 {
@@ -18,10 +19,17 @@ namespace E4Um.Helpers
         public static Dictionary<string, double> ReturnWordsDictionary()
         {
             wordsDictionary.Clear();
-            foreach(string str in termTranslationList)
-            {
-                wordsDictionary.Add(str.ToLower(), 5);
-            }
+            //if(StaticConfigProvider.WordsDictionary.Length != 0)
+            //{
+            //    wordsDictionary = JsonConvert.DeserializeObject<Dictionary<string, double>>(StaticConfigProvider.WordsDictionary);
+            //}
+            //else
+            //{
+                foreach (string str in termTranslationList)
+                {
+                    wordsDictionary.Add(str.ToLower(), 3);
+                }
+            //}
             return wordsDictionary;
         }
 
@@ -39,7 +47,7 @@ namespace E4Um.Helpers
                 else break;
                 
             }
-            return wordsDictionary;
+            return currentWordsDictionary;
         }
 
         public static List<string> ReturnTermTranslationList(string path, string callerMethodName)
@@ -62,7 +70,7 @@ namespace E4Um.Helpers
             return termTranslationList;
         }
 
-        public static void SortTermTranslationList(Dictionary<string, double> wordsDictionary)
+        public static void GetSortedTermTranslationList(Dictionary<string, double> wordsDictionary)
         {
             termTranslationList.Clear();
             foreach (KeyValuePair<string, double> record in wordsDictionary)

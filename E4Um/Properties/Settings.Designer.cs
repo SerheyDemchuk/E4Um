@@ -166,5 +166,41 @@ namespace E4Um.Properties {
                 this["isTestOn"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool isTestOpenFirstly {
+            get {
+                return ((bool)(this["isTestOpenFirstly"]));
+            }
+            set {
+                this["isTestOpenFirstly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string wordsDictionary {
+            get {
+                return ((string)(this["wordsDictionary"]));
+            }
+            set {
+                this["wordsDictionary"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool startTimer {
+            get {
+                return ((bool)(this["startTimer"]));
+            }
+            set {
+                this["startTimer"] = value;
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Interop;
 using E4Um.AppSettings;
 using E4Um.Helpers;
+using Newtonsoft.Json;
 
 namespace E4Um.Models
 {
@@ -44,6 +45,20 @@ namespace E4Um.Models
             }
         }
 
+        List<string> termTranslationList;
+        public List<string> TermTranslationList
+        {
+            get { return termTranslationList; }
+            set
+            {
+                if (termTranslationList != value)
+                {
+                    termTranslationList = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         List<string> termList;
         public List <string> TermList
         {
@@ -72,8 +87,8 @@ namespace E4Um.Models
             }
         }
 
-        List<string> currentTermList;
-        public List<string> CurrentTermList
+        static List<string> currentTermList;
+        public static List<string> CurrentTermList
         {
             get { return currentTermList; }
             set
@@ -81,13 +96,13 @@ namespace E4Um.Models
                 if (currentTermList != value)
                 {
                     currentTermList = value;
-                    NotifyPropertyChanged();
+                    StaticNotifyPropertyChanged();
                 }
             }
         }
 
-        List<string> currentTranslationList;
-        public List<string> CurrentTranslationList
+        static List<string> currentTranslationList;
+        public static List<string> CurrentTranslationList
         {
             get { return currentTranslationList; }
             set
@@ -95,24 +110,11 @@ namespace E4Um.Models
                 if (currentTranslationList != value)
                 {
                     currentTranslationList = value;
-                    NotifyPropertyChanged();
+                    StaticNotifyPropertyChanged();
                 }
             }
         }
 
-        List<string> termTranslationList;
-        public List<string> TermTranslationList
-        {
-            get { return termTranslationList; }
-            set
-            {
-                if (termTranslationList != value)
-                {
-                    termTranslationList = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
         bool isTestOpenFirstly;
         public bool IsTestOpenFirstly
         {
@@ -127,21 +129,52 @@ namespace E4Um.Models
             }
         }
 
-        public bool IsTestOn { get; set; }
+        public bool isTestOn;
+        public bool IsTestOn
+        {
+            get { return isTestOn; }
+            set
+            {
+                if (isTestOn != value)
+                {
+                    isTestOn = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public int TermCounter { get; set; }
         public int TranslationCounter { get; set; }
         public int TermListCount { get; set; }
         public int TranslationListCount { get; set; }
 
-        public PopUp()
+        readonly IWindowService openWindowService;
+        public PopUp(IWindowService openWindowService)
         {
             GetTermTranslationList(StaticConfigProvider.CurrentCategoryPath);
+            GetWordsDictionary();
             IsTestOn = StaticConfigProvider.IsTestOn;
-            IsTestOpenFirstly = true;
+            IsTestOpenFirstly = StaticConfigProvider.IsTestOpenFirstly;
+            //IsTestOpenFirstly = true;
             TermCounter = 0;
             TranslationCounter = 0;
             TermListCount = TermList.Count;
             TranslationListCount = TranslationList.Count;
+
+            if (IsTestOn && !IsTestOpenFirstly)
+            {
+                GetCurrentWordsDictionary(10);
+                FillCurrentTermTranslationLists(CurrentWordsDictionary);
+            }
+
+            else if(IsTestOn && IsTestOpenFirstly)
+            {
+                //CurrentWordsDictionary = new Dictionary<string, double>();
+                GetCurrentWordsDictionary(10);
+                FillCurrentTermTranslationLists(CurrentWordsDictionary);
+            }
+
+            this.openWindowService = openWindowService;
             StaticConfigProvider.StaticPropertyChanged += StaticConfigProvider_PropertyChanged;
 
         }
@@ -163,19 +196,25 @@ namespace E4Um.Models
                     break;
                 case "IsTestOn":
                     if (StaticConfigProvider.IsTestOn == true)
+                    {
+                        WordsDictionary = ReadFromFileService.ReturnWordsDictionary();
                         IsTestOn = true;
+                    }
                     else IsTestOn = false;
+                    break;
+                case "IsTestOpenFirstly":
+                    IsTestOpenFirstly = StaticConfigProvider.IsTestOpenFirstly;
                     break;
             }
         }
 
-        // Methods for non-test mode
         public Dictionary<string, double> GetWordsDictionary()
         {
             WordsDictionary = ReadFromFileService.ReturnWordsDictionary();
             return WordsDictionary;
         }
 
+        // Methods for non-test mode
         public List<string> GetTermList()
         {
             TermList = ReadFromFileService.ReturnTermList();
@@ -193,16 +232,14 @@ namespace E4Um.Models
         {
             string callerMethodName = caller;
             TermTranslationList = ReadFromFileService.ReturnTermTranslationList(path, callerMethodName);
+            GetTermList();
+            GetTranslationList();
 
             if (IsTestOn)
             {
-                GetWordsDictionary();
-                if (!WordsDictionary.Values.Contains(3) && !WordsDictionary.Values.Contains(1))
-                    IsTestOpenFirstly = true;
+                IsTestOpenFirstly = true;
+                openWindowService.CreateTestWindow();   
             }
-
-            GetTermList();
-            GetTranslationList();
             NotifyPropertyChanged();
         }
 
@@ -270,15 +307,83 @@ namespace E4Um.Models
             return CurrentTranslationList;
         }
 
+        public void FillCurrentTermTranslationLists(Dictionary<string, double> currentDictionary)
+        {
+            List<string> tempTermTranslationList = new List<string>();
+            CurrentTermList = new List<string>();
+            CurrentTranslationList = new List<string>();
+            foreach (KeyValuePair<string, double> record in currentDictionary)
+            {
+                tempTermTranslationList.Add(record.Key);
+            }
+
+            foreach (string str in tempTermTranslationList)
+            {
+                int index = str.IndexOf(" - ");
+                if (index != -1)
+                {
+                    int translationLength = str.Length - 2 - index;
+                    CurrentTermList.Add(str.Substring(0, index + 2));
+                    CurrentTranslationList.Add(str.Substring(index + 2, translationLength));
+                }
+                else
+                {
+                    int secondIndex = str.IndexOf("-");
+                    int translationLength = str.Length - 1 - secondIndex;
+                    CurrentTermList.Add(str.Substring(0, secondIndex + 1));
+                    CurrentTranslationList.Add(str.Substring(secondIndex + 1, translationLength));
+                }
+
+            }
+
+        }
+
         public void ReSortWordsDictionary()
         {
             WordsDictionary = (from entry in WordsDictionary orderby entry.Value descending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-            ReadFromFileService.SortTermTranslationList(WordsDictionary);
+            ReadFromFileService.GetSortedTermTranslationList(WordsDictionary);
             //GetTermList();
             //GetTranslationList();
             StaticNotifyPropertyChanged();
         }
 
+        public void ReSortCurrentWordsDictionary()
+        {
+            CurrentWordsDictionary = (from entry in CurrentWordsDictionary orderby entry.Value descending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
+            ReadFromFileService.GetSortedTermTranslationList(CurrentWordsDictionary);
+            SynchronizeWordsDictionaries();
+            ReSortWordsDictionary();
+            //GetTermList();
+            //GetTranslationList();
+            StaticNotifyPropertyChanged();
+        }
+
+        public void SynchronizeWordsDictionaries()
+        {
+            foreach (KeyValuePair<string, double> currentWordsDictionaryRecord in CurrentWordsDictionary)
+            {
+                foreach (var key in WordsDictionary.Keys.ToList())
+                {
+                    for (double value = WordsDictionary[key]; ;)
+                    {
+                        if (key == currentWordsDictionaryRecord.Key)
+                        {
+                            WordsDictionary[key] = currentWordsDictionaryRecord.Value;
+                            break;
+                        }
+                        else break;
+                    }
+                }
+            }
+        }
+
+        public static void SerializeWordsDictionary()
+        {
+            if(WordsDictionary.Count != 0)
+                StaticConfigProvider.WordsDictionary = JsonConvert.SerializeObject(WordsDictionary);
+        }
+
+        #region Instance and Static NPC
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
@@ -288,7 +393,6 @@ namespace E4Um.Models
             }
         }
 
-        #region Static NPC
         public static event PropertyChangedEventHandler StaticPropertyChanged;
         public static void StaticNotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {

@@ -11,12 +11,14 @@ namespace E4Um
     /// </summary>
     public partial class App : Application
     {
-        MainWindowModel mainVM = new MainWindowModel(new Models.PopUp(), new ConfigProvider(), new OpenWindowService());
+        MainWindowModel mainVM = new MainWindowModel(new Models.PopUp(new OpenWindowService()), new ConfigProvider(), new OpenWindowService());
+        PopUpWindowModel popUpVM = new PopUpWindowModel(new Models.PopUp(new OpenWindowService()), new OpenWindowService(), new ConfigProvider());
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             new MainWindow(new ConfigProvider()) { DataContext = mainVM }.Show();
+            new PopUpWindow() { DataContext = popUpVM }.Show();
         }
 
     }

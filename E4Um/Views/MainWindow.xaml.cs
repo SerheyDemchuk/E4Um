@@ -21,6 +21,7 @@ using E4Um.ViewModels;
 using E4Um.Helpers;
 using E4Um.AppSettings;
 using MahApps.Metro.Controls;
+using Newtonsoft.Json;
 
 namespace E4Um
 {
@@ -87,6 +88,7 @@ namespace E4Um
         protected override void OnClosing(CancelEventArgs e)
         {
             nIcon.Visible = false;
+            //Models.PopUp.SerializeWordsDictionary();
             configProvider.SaveSettings();
             StaticConfigProvider.SaveSettings();
             base.OnClosing(e);

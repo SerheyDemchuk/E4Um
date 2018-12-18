@@ -64,7 +64,7 @@ namespace E4Um.ViewModels
         private readonly IConfigProvider configProvider;
         private readonly IWindowService openWindowService;
 
-        public RelayCommand OpenPopUpWindowCommand { get; set; }
+        //public RelayCommand OpenPopUpWindowCommand { get; set; }
         public RelayCommand OpenTermFontDialogCommand { get; set; }
         public RelayCommand OpenTranslationFontDialogCommand { get; set; }
         public RelayCommand SelectedItemChangedCommand { get; set; }
@@ -97,7 +97,7 @@ namespace E4Um.ViewModels
             this.openWindowService = openWindowService;
 
             TreeViewItemsList = GetItems("English");
-            OpenPopUpWindowCommand = new RelayCommand(OpenPopUpWindowCommand_Execute);
+            //OpenPopUpWindowCommand = new RelayCommand(OpenPopUpWindowCommand_Execute);
             OpenTermFontDialogCommand = new RelayCommand(OpenTermFontDialogCommand_Execute);
             OpenTranslationFontDialogCommand = new RelayCommand(OpenTranslationFontDialogCommand_Execute);
             SelectedItemChangedCommand = new RelayCommand(SelectedItemChangedCommand_Execute);
@@ -141,13 +141,21 @@ namespace E4Um.ViewModels
                     }
                     NotifyPropertyChanged();
                     break;
+                case "IsTestOn":
+                    if (Model.IsTestOn)
+                    {
+                        if (StaticConfigProvider.IsTestOpenFirstly)
+                            openWindowService.CreateTestWindow();
+                    }
+                    break;
+
             }            
         }
 
-        public void OpenPopUpWindowCommand_Execute(object parameter)
-        {
-            openWindowService.CreatePopUpWindow(configProvider.PopUpMode, (int)StaticConfigProvider.DelayMilliSeconds * 1000, configProvider.PopUpWidthToContent);
-        }
+        //public void OpenPopUpWindowCommand_Execute(object parameter)
+        //{
+        //    openWindowService.CreatePopUpWindow(configProvider.PopUpMode, (int)StaticConfigProvider.DelayMilliSeconds * 1000, configProvider.PopUpWidthToContent);
+        //}
         
         public void OpenTermFontDialogCommand_Execute(object parameter)
         {

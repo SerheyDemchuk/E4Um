@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 using System.ComponentModel;
 using E4Um.Models;
@@ -151,6 +152,7 @@ namespace E4Um.ViewModels
 
         // Test-related data
         List<double> PriorityList { get; set; }
+        int IterationsCounter { get; set; }
         int HighPriorityCounter { get; set; }
         int MiddlePriorityCounter { get; set; }
         int LowPriorityCounter { get; set; }
@@ -168,6 +170,7 @@ namespace E4Um.ViewModels
             CurrentRecord = 0;
             DefaultModeOffset = false;
             PriorityList = new List<double>();
+            IterationsCounter = 0;
             HighPriorityCounter = 0;
             MiddlePriorityCounter = 0;
             LowPriorityCounter = 0;
@@ -201,13 +204,26 @@ namespace E4Um.ViewModels
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "WordsDictionary")
+            switch (e.PropertyName)
             {
-                WordsDictionary = PopUp.WordsDictionary;
-                foreach(KeyValuePair<string, double> record in WordsDictionary)
-                {
-                    PriorityList.Add(record.Value);
-                }
+                case "WordsDictionary":
+                    WordsDictionary = PopUp.WordsDictionary;
+                    //foreach (KeyValuePair<string, double> record in WordsDictionary)
+                    //{
+                    //    PriorityList.Add(record.Value);
+                    //}
+                    break;
+                //case "IsTestOn":
+
+                //case "ReSortWordsDictionary":
+                //    if (!PopUp.CurrentWordsDictionary.Values.Contains(3))
+                //        openWindowTimer.Start();
+                //    break;
+                //case "ReSortCurrentWordsDictionary":
+                //    if(!PopUp.CurrentWordsDictionary.Values.Contains(3))
+                //    openWindowTimer.Start();
+                //    break;
+
             }
         }
 
@@ -260,9 +276,13 @@ namespace E4Um.ViewModels
                     TranslationFontStyle = StaticConfigProvider.TranslationFontStyle;
                     break;
                 case "IsTestOn":
-                    if (StaticConfigProvider.IsTestOn == true)
+                    if (StaticConfigProvider.IsTestOn == true && Model.IsTestOpenFirstly)
                         openWindowTimer.Stop();
                     else openWindowTimer.Start();
+                    break;
+                case "StartTimer":
+                    if (StaticConfigProvider.StartTimer)
+                        openWindowTimer.Start();
                     break;
 
             }
@@ -338,45 +358,97 @@ namespace E4Um.ViewModels
         public void ChangeWindowContent()
         {
 
-           if (CurrentRecord < Model.TermList.Count)
-           {
-                if(PriorityList.Count != 0)
+            if (StaticConfigProvider.IsTestOn)
+            {
+                if (CurrentRecord < PopUp.CurrentTermList.Count)
                 {
-                    if (PriorityList[CurrentRecord] == 5)
+                    if(IterationsCounter < 1)
                     {
-                        WindowContentTerm = Model.TermList[CurrentRecord];
-                        WindowContentTranslation = Model.TranslationList[CurrentRecord];
+                        WindowContentTerm = PopUp.CurrentTermList[CurrentRecord];
+                        WindowContentTranslation = PopUp.CurrentTranslationList[CurrentRecord];
                         CurrentRecord++;
                     }
-                    else if (PriorityList[CurrentRecord] == 3 && HighPriorityCounter != 8)
+                    else
                     {
-                        HighPriorityCounter++;
-                        CurrentRecord = 0;
-                        WindowContentTerm = Model.TermList[CurrentRecord];
-                        WindowContentTranslation = Model.TranslationList[CurrentRecord];
-                        CurrentRecord++;
+                        IterationsCounter = 0;
+                        openWindowTimer.Stop();
+                        StaticConfigProvider.StartTimer = false;
+                        if(PopUp.WordsDictionary.Values.Contains(5) || PopUp.WordsDictionary.Values.Contains(4) || PopUp.WordsDictionary.Values.Contains(3) || PopUp.WordsDictionary.Values.Contains(2))
+                            windowService.ShowTestWindow();
                     }
-                    else if (PriorityList[CurrentRecord] == 3 && HighPriorityCounter == 8)
-                    {
-                        WindowContentTerm = Model.TermList[CurrentRecord];
-                        WindowContentTranslation = Model.TranslationList[CurrentRecord];
-                        CurrentRecord++;
-                    }
+
                 }
                 else
+                {
+                    CurrentRecord = 0;
+                    IterationsCounter++;
+                    WindowContentTerm = Model.TermList[CurrentRecord];
+                    WindowContentTranslation = Model.TranslationList[CurrentRecord];
+                    CurrentRecord++;
+                }
+
+            }
+
+
+            else
+            {
+                if (CurrentRecord < Model.TermList.Count)
                 {
                     WindowContentTerm = Model.TermList[CurrentRecord];
                     WindowContentTranslation = Model.TranslationList[CurrentRecord];
                     CurrentRecord++;
                 }
-           }
-           else
-            {
-                CurrentRecord = 0;
-                WindowContentTerm = Model.TermList[CurrentRecord];
-                WindowContentTranslation = Model.TranslationList[CurrentRecord];
-                CurrentRecord++;
+                else
+                {
+                    CurrentRecord = 0;
+                    WindowContentTerm = Model.TermList[CurrentRecord];
+                    WindowContentTranslation = Model.TranslationList[CurrentRecord];
+                    CurrentRecord++;
+                }
+
             }
+
+            //if (CurrentRecord < Model.TermList.Count)
+            //{
+            //     if(PriorityList.Count != 0)
+            //     {
+            //         if (PriorityList[CurrentRecord] == 5)
+            //         {
+            //             WindowContentTerm = Model.TermList[CurrentRecord];
+            //             WindowContentTranslation = Model.TranslationList[CurrentRecord];
+            //             CurrentRecord++;
+            //         }
+            //         else if (PriorityList[CurrentRecord] == 3 && HighPriorityCounter != 8)
+            //         {
+            //             HighPriorityCounter++;
+            //             CurrentRecord = 0;
+            //             WindowContentTerm = Model.TermList[CurrentRecord];
+            //             WindowContentTranslation = Model.TranslationList[CurrentRecord];
+            //             CurrentRecord++;
+            //         }
+            //         else if (PriorityList[CurrentRecord] == 3 && HighPriorityCounter == 8)
+            //         {
+            //             WindowContentTerm = Model.TermList[CurrentRecord];
+            //             WindowContentTranslation = Model.TranslationList[CurrentRecord];
+            //             CurrentRecord++;
+            //         }
+            //     }
+            //     else
+            //     {
+            //         WindowContentTerm = Model.TermList[CurrentRecord];
+            //         WindowContentTranslation = Model.TranslationList[CurrentRecord];
+            //         CurrentRecord++;
+            //     }
+            //}
+            //else
+            // {
+            //     CurrentRecord = 0;
+            //     WindowContentTerm = Model.TermList[CurrentRecord];
+            //     WindowContentTranslation = Model.TranslationList[CurrentRecord];
+            //     CurrentRecord++;
+            // }
+
+
 
         }
 

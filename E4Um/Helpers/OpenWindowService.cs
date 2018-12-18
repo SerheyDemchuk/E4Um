@@ -36,7 +36,7 @@ namespace E4Um.Helpers
         public void CreatePopUpWindow(string mode, int delayMilliSeconds, string popUpSizeToContent)
         {
             Point pt = SystemParameters.WorkArea.TopLeft;
-            PopUpWindow popUpWindow = new PopUpWindow(mode) { DataContext = new PopUpWindowModel(new Models.PopUp(), new OpenWindowService(), new ConfigProvider())};
+            PopUpWindow popUpWindow = new PopUpWindow() { DataContext = new PopUpWindowModel(new Models.PopUp(new OpenWindowService()), new OpenWindowService(), new ConfigProvider())};
 
             switch (mode)
             {
@@ -187,7 +187,7 @@ namespace E4Um.Helpers
         public void CreateTestWindow()
         {
             Point pt = SystemParameters.WorkArea.TopLeft;
-            TestWindow testWindow = new TestWindow() { DataContext = new TestWindowModel(new Models.PopUp(), new OpenWindowService()) };
+            TestWindow testWindow = new TestWindow() { DataContext = new TestWindowModel(new Models.PopUp(new OpenWindowService()), new OpenWindowService()) };
 
             DoubleAnimation fadeIn = new DoubleAnimation(1, TimeSpan.FromSeconds(0.2));
             testWindow.BeginAnimation(UIElement.OpacityProperty, fadeIn);
@@ -216,6 +216,7 @@ namespace E4Um.Helpers
         public void HideTestWindow()
         {
             Window testWindow = null;
+            DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.2));
 
             foreach (Window window in Application.Current.Windows)
             {
@@ -231,7 +232,6 @@ namespace E4Um.Helpers
                 Thread.Sleep(1000);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    DoubleAnimation animation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.4));
                     testWindow.BeginAnimation(UIElement.OpacityProperty, animation);
                 });
             });
