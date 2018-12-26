@@ -90,6 +90,7 @@ namespace E4Um
             nIcon.Visible = false;
             //Models.PopUp.SerializeWordsDictionary();
             configProvider.SaveSettings();
+            StaticConfigProvider.IsTestOn = false;
             StaticConfigProvider.SaveSettings();
             base.OnClosing(e);
         }

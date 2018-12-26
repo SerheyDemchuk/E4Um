@@ -169,8 +169,8 @@ namespace E4Um.Models
 
             else if(IsTestOn && IsTestOpenFirstly)
             {
-                //CurrentWordsDictionary = new Dictionary<string, double>();
-                GetCurrentWordsDictionary(10);
+                CurrentWordsDictionary = new Dictionary<string, double>();
+                //GetCurrentWordsDictionary(10);
                 FillCurrentTermTranslationLists(CurrentWordsDictionary);
             }
 

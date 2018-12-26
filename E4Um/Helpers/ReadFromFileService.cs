@@ -70,16 +70,6 @@ namespace E4Um.Helpers
             return termTranslationList;
         }
 
-        public static void GetSortedTermTranslationList(Dictionary<string, double> wordsDictionary)
-        {
-            termTranslationList.Clear();
-            foreach (KeyValuePair<string, double> record in wordsDictionary)
-            {
-                termTranslationList.Add(record.Key);
-            }
-            StringSlicer(StaticConfigProvider.IsTermUpper, StaticConfigProvider.IsTranslationUpper);
-        }
-
         public static List<string> ReturnTermList()
         {
             return termList;
@@ -88,6 +78,16 @@ namespace E4Um.Helpers
         public static List<string> ReturnTranslationList()
         {
             return translationList;
+        }
+
+        public static void GetSortedTermTranslationList(Dictionary<string, double> wordsDictionary)
+        {
+            termTranslationList.Clear();
+            foreach (KeyValuePair<string, double> record in wordsDictionary)
+            {
+                termTranslationList.Add(record.Key);
+            }
+            StringSlicer(StaticConfigProvider.IsTermUpper, StaticConfigProvider.IsTranslationUpper);
         }
 
         public static void StringSlicer(bool isTermUpper, bool isTranslationUpper)

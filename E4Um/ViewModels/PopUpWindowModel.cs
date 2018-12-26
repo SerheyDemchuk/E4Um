@@ -31,7 +31,6 @@ namespace E4Um.ViewModels
 
         #region Term/Translation properties
         string windowContentTerm;
-        string windowContentTranslation;
         public string WindowContentTerm
         {
             get { return windowContentTerm; }
@@ -42,6 +41,7 @@ namespace E4Um.ViewModels
             }
         }
 
+        string windowContentTranslation;
         public string WindowContentTranslation
         {
             get { return windowContentTranslation; }
@@ -145,17 +145,19 @@ namespace E4Um.ViewModels
         }
         #endregion
 
-        public PopUp Model { get; }
+        PopUp Model { get; }
         string PopUpMode { get; set; }
         int CurrentRecord { get; set; }
         bool DefaultModeOffset { get; set; }
 
         // Test-related data
-        List<double> PriorityList { get; set; }
+
         int IterationsCounter { get; set; }
-        int HighPriorityCounter { get; set; }
-        int MiddlePriorityCounter { get; set; }
-        int LowPriorityCounter { get; set; }
+
+        //List<double> PriorityList { get; set; }
+        //int HighPriorityCounter { get; set; }
+        //int MiddlePriorityCounter { get; set; }
+        //int LowPriorityCounter { get; set; }
         // /Test-related data
 
         public PopUpWindowModel(PopUp model, IWindowService windowService, IConfigProvider configProvider)
@@ -169,11 +171,11 @@ namespace E4Um.ViewModels
             PopUpMode = this.configProvider.PopUpMode;
             CurrentRecord = 0;
             DefaultModeOffset = false;
-            PriorityList = new List<double>();
-            IterationsCounter = 0;
-            HighPriorityCounter = 0;
-            MiddlePriorityCounter = 0;
-            LowPriorityCounter = 0;
+            //PriorityList = new List<double>();
+            //IterationsCounter = 0;
+            //HighPriorityCounter = 0;
+            //MiddlePriorityCounter = 0;
+            //LowPriorityCounter = 0;
 
             ChangeWindowContent();
 
@@ -277,7 +279,10 @@ namespace E4Um.ViewModels
                     break;
                 case "IsTestOn":
                     if (StaticConfigProvider.IsTestOn == true && Model.IsTestOpenFirstly)
+                    {
                         openWindowTimer.Stop();
+                        CurrentRecord = 0;
+                    }
                     else openWindowTimer.Start();
                     break;
                 case "StartTimer":
@@ -357,7 +362,6 @@ namespace E4Um.ViewModels
 
         public void ChangeWindowContent()
         {
-
             if (StaticConfigProvider.IsTestOn)
             {
                 if (CurrentRecord < PopUp.CurrentTermList.Count)
@@ -382,13 +386,9 @@ namespace E4Um.ViewModels
                 {
                     CurrentRecord = 0;
                     IterationsCounter++;
-                    WindowContentTerm = Model.TermList[CurrentRecord];
-                    WindowContentTranslation = Model.TranslationList[CurrentRecord];
-                    CurrentRecord++;
                 }
 
             }
-
 
             else
             {

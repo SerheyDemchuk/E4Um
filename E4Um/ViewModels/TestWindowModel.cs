@@ -296,16 +296,17 @@ namespace E4Um.ViewModels
         public PopUp Model { get; }
         public int InitialFillTestIndex { get; set; }
         public int FillTestIndex { get; set; }
+        public int FillTestNextWordIndex { get; set; }
         public int TestAppearCounter { get; set; }
         public bool IsDictionaryCompleted { get; set; }
-        public bool IsNewWord { get; set; }
+        //public bool IsNewWord { get; set; }
         public bool IsNextWord { get; set; }
         public int PriorityReduсtionCounter { get; set; }
         public int DictionaryRefreshCounter { get; set; }
         public int DictionaryRefreshIndex { get; set; }
         public static int NextWordCounter { get; set; }
         public int NewWordsAmount { get; set; }
-        public int FillTestNextWordIndex { get; set; }
+
         bool TranslationClickCanExecute { get; set; }
 
         readonly IWindowService openWindowService;
@@ -320,7 +321,7 @@ namespace E4Um.ViewModels
             FillTestIndex = 0;
             TestAppearCounter = 0;
             IsDictionaryCompleted = false;
-            IsNewWord = true;
+            //IsNewWord = true;
             PriorityReduсtionCounter = 0;
             DictionaryRefreshCounter = BlockVolume;
             DictionaryRefreshIndex = BlockVolume;
@@ -811,7 +812,9 @@ namespace E4Um.ViewModels
                                                     PopUp.WordsDictionary[key] -= 1;
                                                     Model.ReSortWordsDictionary();
                                                 }
+
                                                 NextWord();
+
                                                 break;
                                             }
                                             //else if (PopUp.WordsDictionary[key] == 2)
@@ -891,7 +894,7 @@ namespace E4Um.ViewModels
         {
             //if(DictionaryRefreshCounter < PopUp.WordsDictionary.Count )
             //{
-                if(PopUp.WordsDictionary.ElementAt(DictionaryRefreshCounter).Value != 2)
+                if(PopUp.WordsDictionary.ElementAt(DictionaryRefreshCounter).Value != 2 && InitialFillTestIndex < PopUp.WordsDictionary.Count)
                 {
                     PopUp.CurrentWordsDictionary.Add(PopUp.WordsDictionary.ElementAt(DictionaryRefreshCounter).Key, PopUp.WordsDictionary.ElementAt(DictionaryRefreshCounter).Value);
                     Model.FillCurrentTermTranslationLists(PopUp.CurrentWordsDictionary);
