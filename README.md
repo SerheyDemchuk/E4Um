@@ -12,3 +12,9 @@ The user controls window's position and sets delay time of the current pair fore
   - Time interval between appearances (for appearance and pop up modes)
   - Current foreign word/translation delay time
 - User vocabulary checking for showing unknown words
+
+# GUI
+[MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
+
+# Screen shots
+![Screenshot](screenshots/2019-01-16 12_09_17-Instant English.png)
