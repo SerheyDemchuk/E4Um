@@ -17,13 +17,21 @@ The user controls window's position and sets delay time of the current pair fore
 [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
 
 # Screen shots
-![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_10_53-Instant%20English.png)
+<p align="center">
+  <img src="https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_10_53-Instant%20English.png">
+</p>
 
-![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_14_08-Instant%20English.png)
+<p align="center">
+  <img src="https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_14_08-Instant%20English.png">
+</p>
 
-![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_09_17-Instant%20English.png)
+<p align="center">
+  <img src="https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_09_17-Instant%20English.png">
+</p>
 
-![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_09_58-Instant%20English.png)
+<p align="center">
+  <img src="https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_09_58-Instant%20English.png">
+</p>
 
 ![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_23_11-.png)
 
@@ -32,4 +40,3 @@ The user controls window's position and sets delay time of the current pair fore
 ![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_34_49-.png)
 
 ![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_41_26-.png)
-
