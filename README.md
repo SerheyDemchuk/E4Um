@@ -17,4 +17,12 @@ The user controls window's position and sets delay time of the current pair fore
 [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
 
 # Screen shots
-![Screenshot](screenshots/2019-01-16 12_09_17-Instant English.png)
+![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_10_53-Instant%20English.png)
+![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_14_08-Instant%20English.png)
+![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_09_17-Instant%20English.png)
+![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_09_58-Instant%20English.png)
+![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_23_11-.png)
+![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_25_04-.png)
+![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_34_49-.png)
+![Screenshot](https://github.com/SerheyDemchuk/E4Um/blob/master/screenshots/2019-01-16%2012_41_26-.png)
+
