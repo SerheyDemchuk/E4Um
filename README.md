@@ -1,5 +1,5 @@
 # Welcome to Instant English!
-Instant English is the further development of the idea of learning foreign (or unknown) words during another work on PC. 
+Instant English is the further development of the idea of learning foreign (unknown) words during another work on PC. 
 The foreign word and its translation are located inside window. 
 The user controls window's position and sets delay time of the current pair foreign word/translation. 
 
